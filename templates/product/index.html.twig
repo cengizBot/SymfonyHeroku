@@ -75,15 +75,15 @@
         $.ajax({
                 method: "GET",
                 url: "/like",
-                async: true,
                 success: function(data){
-                    
+                    console.log(data.length);
                     let array = data.product_id;
                     let id_product = "{{ product.id }}";
                     
                     if(array.length > 0){
                         $(form_like).attr('action',`unlikeProduct/${id_product}`);
                         $(form_like).append('<button type="button" class="btn btn-primary" id="btn_like" style="font-size:14px">Vous aimé ce produit</button>');
+
                     }
                     else{
                         $(form_like).attr('action',`likeproduct/${id_product}`);
@@ -98,21 +98,71 @@
 
 
     $(document).on('click','#btn_like' ,function(e){
+
+       let action = $(form_like).attr('action');
+
+       let url = action.split('/').shift();
+
+       switch (url) {
+
+            case 'likeproduct':
+
+              console.log('like product');
+
+              $.ajax({
+                        method: "post",
+                        url: "/likeproduct/{{ product.id  }}",
+                        success: function(data){
+                            console.log(data);
+
+                        if(data.product_id === true){
+                            
+                            $(form_like).attr('action','unlikeProduct/{{ product.id }}')
+                            $('#btn_like').removeClass('disabled_btn');
+                            $('#btn_like').addClass('btn-primary');
+                            $('#btn_like').text('Vous aimé ce produit');
+                            
+                        }
+                        
+                        
+                        },
+                        error: function(error){
+                            console.log(error);
+                        }
+               });
+
+
+                break;
+            case 'unlikeProduct':
+                console.log('unlike product');
+            
+              $.ajax({
+                        method: "post",
+                        url: "/dislelikeproduct/{{ product.id }}",
+                        success: function(data){
+                            console.log(data);
+
+                        if(data.product_id === true){
+                            
+                            $(form_like).attr('action','likeproduct/{{ product.id }}')
+                            $('#btn_like').addClass('disabled_btn');
+                            $('#btn_like').removeClass('btn-primary');
+                            $('#btn_like').text('Liker ce produit');
+                        }
+                        
+                        
+                        },
+                        error: function(error){
+                            console.log(error);
+                        }
+               });
+
+
+                break;
+
+       }
         
-       $.ajax({
-                method: "GET",
-                url: "/likeproduct/{{ product.id  }}",
-                async: false,
-                success: function(data){
-                    
-                   console.log(data);
-                   
-                   
-                },
-                error: function(error){
-                    console.log(error);
-                }
-        });
+     
 
     })
 

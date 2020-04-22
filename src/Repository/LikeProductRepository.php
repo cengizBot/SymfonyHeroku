@@ -42,7 +42,7 @@ class LikeProductRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return Product[]
+     * @return Boolean
      */
     public function likeProduct($id_prod,$id_user)
     {
@@ -56,27 +56,56 @@ class LikeProductRepository extends ServiceEntityRepository
             
             $conn = $this->getEntityManager()->getConnection();
 
-            $stmt = $conn->prepare("SELECT * FROM like_product");
-            // $stmt = $conn->prepare("INSERT INTO like (user_id, product_id) VALUES (?, ?)");
+            // $stmt = $conn->prepare("INSERT INTO like_product (user_id, product_id) VALUES (?, ?)");
             // $stmt->bindParam(1, $name);
             // $stmt->bindParam(2, $value);
 
             // $name = 8;
             // $value = 1;
 
-            $stmt->execute();
-
-            // $sql = "INSERT INTO like (user_id , product_id) VALUES (8,5)";
-            // $stmt = $conn->prepare($sql);
             // $stmt->execute();
 
-            return $stmt->fetchAll();
+            $sql = "INSERT INTO like_product (user_id , product_like_id) VALUES (:user_id,:product_id)";
+            $stmt = $conn->prepare($sql);
+            $stmt->execute(['user_id' => $id_user , "product_id" => $id_prod]);
+            
+            return true;
 
         }
 
 
         return false;   
     }
+
+     /**
+     * @return Boolean
+     */
+    public function unlikeProduct($id_prod,$id_user)
+    {
+
+        $id_user = intval($id_user);
+        $id_prod = intval($id_prod);
+
+        $check = $this->findByExampleField($id_prod,$id_user);
+
+        if($check){
+            
+            $conn = $this->getEntityManager()->getConnection();
+
+            $sql = "DELETE FROM like_product WHERE like_product.product_like_id = :product_id AND  like_product.user_id = :user_id";
+            $stmt = $conn->prepare($sql);
+            $stmt->execute(['user_id' => $id_user , "product_id" => $id_prod]);
+            
+            return true;
+
+        }
+
+
+        return false;   
+    }
+
+
+    
 
     // /**
     //  * @return LikeProduct[] Returns an array of LikeProduct objects

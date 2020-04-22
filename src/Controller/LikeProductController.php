@@ -53,4 +53,24 @@ class LikeProductController extends AbstractController
         return $this->json(['code' => 200 , 'product_id' => $products]);
 
     }
+
+    /**
+    * @Route("/dislelikeproduct/{id}", name="dislelikeproduct")
+    */
+    public function dislelikeproduct(Request $request, Session $session, EntityManagerInterface $em)
+    {
+
+        $id_prod = $session->get('product');
+
+        
+
+        $userId = $this->getUser()->getId();
+
+        $products = $this->getDoctrine()->getRepository(LikeProduct::class)
+        ->unlikeProduct($id_prod,$userId);
+
+     
+        return $this->json(['code' => 200 , 'product_id' => $products]);
+
+    }
 }
