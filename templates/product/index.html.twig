@@ -1,0 +1,155 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello ProductController!{% endblock %}
+
+{% block body %}
+
+
+
+
+<br/>
+<br/>
+<div class="row" id="row_product">
+    <div class="col-lg-6 col-md-7" style="margin-bottom:10px">
+        <img style="width:100%" src="{{asset('build/images/product/') ~ product.image }}">
+    </div>
+
+    <div class="col-lg-6 col-md-5">
+        <h4 class="title_product"> Article : {{ product.name }} </h4>
+        <div class='row'>
+            <div class='col'>
+            <h5 style="margin-top:20px">Prix : <span class="price_back">{{ product.price }} € </span></h5>
+             <p style="float:right">Garantie 
+                        <span class="garantie_back">
+                        {% if product.garantie == 1 %}
+                            Oui
+                        {% else %}
+                            Non
+                        {% endif %}
+                        </span>
+             </p>
+        
+
+            </div>
+        </div>
+
+        <div id="like_div">
+
+                <form id="like_form" action='' method="post">
+                  
+                </form>
+        </div>
+
+        <div id="categorie_div" style="display: -webkit-inline-box;margin-top:20px">
+              <img style="width:25px" src="{{asset('build/images/product.png')}}">  
+              <p style="margin-left:20px;padding:5px" class="categorie_back"> {{ product.categorie|capitalize }}</p>
+        </div>
+
+        <div id="description">
+
+              <h5 style="margin-top:20px">Description</h5>
+              <div class="line"></div><br/>
+              <p>{{ product.description }}
+              </p>
+        </div>
+        <form method="post" action="/addPanier/{{ product.id }}">
+            <button type="submit" class="btn_add_panier">Ajouter au Panier</button>
+        </form>
+    </div>
+
+</div>
+
+<button type="button" id="ajaxBtn">Ajax</button>
+
+{% block javascripts %}
+        {{ encore_entry_script_tags('front') }}
+{% endblock %}
+
+
+
+<script>
+
+        let btn_like = ('');
+        let form_like = $('#like_form');
+
+        $.ajax({
+                method: "GET",
+                url: "/like",
+                async: true,
+                success: function(data){
+                    
+                    let array = data.product_id;
+                    let id_product = "{{ product.id }}";
+                    
+                    if(array.length > 0){
+                        $(form_like).attr('action',`unlikeProduct/${id_product}`);
+                        $(form_like).append('<button type="button" class="btn btn-primary" id="btn_like" style="font-size:14px">Vous aimé ce produit</button>');
+                    }
+                    else{
+                        $(form_like).attr('action',`likeproduct/${id_product}`);
+                        $(form_like).append('<button type="button" class="btn disabled_btn" id="btn_like" style="font-size:14px">Liker ce produit</button>');
+                    }
+                   
+                },
+                error: function(error){
+                    console.log(error);
+                }
+        });
+
+
+    $(document).on('click','#btn_like' ,function(e){
+        
+       $.ajax({
+                method: "GET",
+                url: "/likeproduct/{{ product.id  }}",
+                async: false,
+                success: function(data){
+                    
+                   console.log(data);
+                   
+                   
+                },
+                error: function(error){
+                    console.log(error);
+                }
+        });
+
+    })
+
+    var isMobile = (/Mobile/i.test(navigator.userAgent));
+
+    if(isMobile){
+        
+        var div = $('#row_product');
+
+        $(div).css('width','100%');
+        
+        $(div).css('margin','0 auto');
+
+    }
+
+
+{# 
+    $("#ajaxBtn").click(function(e){
+
+        $.ajax({
+            method: "POST",
+            url: "/like",
+            dataType: "json",
+            data: { data =>  }
+            success: function(data){
+                console.log(data);
+            },
+            error: function(error){
+                console.log(error);
+            }
+        });
+
+    }) #}
+      
+
+
+</script>
+    
+
+{% endblock %}

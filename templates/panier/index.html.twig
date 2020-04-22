@@ -1,0 +1,75 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello PanierController!{% endblock %}
+
+{% block body %}
+<br/>
+<h5>Votre Panier d'articles</h5>
+
+<div id="panier_darticles" style="margin:0 auto">
+<div class="line"></div>
+<br/>
+
+{% for product in user_panier %}
+
+<div class="shadow_product" id="product_{{ product.name }}" style="margin:20px;padding:10px;display: flex;">
+
+    <img style="width:60px" src="{{asset('build/images/product/') ~ product.img }}"> 
+    <div style="margin-left:15px;width:100%">
+        <div class="row">
+                <div class="col-lg-3 col-md-3 col-sm-3 np-r" style="padding-right: 0px">
+                    <span>Article : <strong>{{ product.name }}</strong> &nbsp;</span>
+                </div>
+
+                <div class="col-lg-3 col-md-3 col-sm-3 np-r" style="padding-right: 0px">
+                    <span >Prix unitaire : <strong>{{ product.price }} €</strong> &nbsp;</span>
+                </div>
+
+                <div class="col-lg-3 col-md-3 col-sm-3 np-r">
+                <span>
+                        {% if product.count  == 1 %}
+                            Nombre d'article
+                        {% else %}
+                            Nombre d'articles
+                        {% endif %}
+
+                        : <strong>{{ product.count }}</strong> &nbsp;</span>
+
+                </div>
+
+                <div class="col-lg-3 col-md-3 col-sm-3 np-r" style="padding-right: 0px">
+                <span >Coûts totaux : <strong>{{ product.cost }} €</strong> &nbsp;</span>
+                </div>
+    
+        </div>
+
+            <div id="add_remove_product" style="color:white;display: flex;float: right;">
+
+                <form method="post" action="added_product/{{ product.id}}" style="float:right">
+                    <button class="added_product" type="submit">+</button>
+                </form>
+
+                
+                <form style="margin-left:5px;float:right" method="post" action="remove_product/{{ product.id}}">
+                    <button class="remove_product" type="submit">-</button>
+                </form>
+
+            </div>
+                       
+     </div>
+
+</div>
+
+
+{% endfor %}
+
+
+<p style="margin-top:40px" class="shadow_product ttc"> TTC : {{ TTC }} € </p>
+
+
+
+</div>
+
+
+
+{% endblock %}
