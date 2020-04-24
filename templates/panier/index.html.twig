@@ -3,11 +3,117 @@
 {% block title %}Hello PanierController!{% endblock %}
 
 {% block body %}
+
+<script>
+
+class PayeForm {
+
+    // input
+    constructor(){
+
+        this.class = '<div class="form-group">'
+        //////////////////////
+        this.name = document.createElement('input');
+        this.firstname = document.createElement('input');
+        this.city = document.createElement('input');
+        this.addr = document.createElement('input');
+        this.cp = document.createElement('input');
+        //////////////
+
+        this.div_content = $('#content_paye');
+
+    }
+
+    InitStyleCss(){
+
+        this.name.classList.add("form-control");
+        this.name.setAttribute("type", "text");
+        this.name.setAttribute("name", "name");
+        this.name.placeholder = "Name";
+        this.name.style.width = "70%";
+
+        this.firstname.classList.add("form-control");
+        this.firstname.setAttribute("type", "text");
+        this.firstname.setAttribute("name", "firstname");
+        this.firstname.placeholder = "Firstname";
+        this.firstname.style.width = "70%";
+
+        this.city.classList.add("form-control");
+        this.city.setAttribute("type", "text");
+        this.city.setAttribute("name", "city");
+        this.city.placeholder = "Ville";
+        this.city.style.width = "70%";
+
+        this.addr.classList.add("form-control");
+        this.addr.setAttribute("type", "text");
+        this.addr.setAttribute("name", "addr");
+        this.addr.placeholder = "Adresse";
+        this.addr.style.width = "70%";
+
+        this.cp.classList.add("form-control");
+        this.cp.setAttribute("type", "text");
+        this.cp.setAttribute("name", "cp");
+        this.cp.placeholder = "Code Postal";
+        this.cp.style.width = "70%";
+         
+
+    }
+
+    PhoneCSS(){
+
+        this.name.style.width = "100%";
+        this.firstname.style.width = "100%";
+        this.city.style.width = "100%";
+        this.addr.style.width = "100%";
+        this.cp.style.width = "100%";
+
+    }
+   
+
+    getName(){
+        return $(this.name);
+    }
+
+    getFirstname(){
+        return $(this.firstname);
+    }
+
+    getCity(){
+        return $(this.city);
+    }
+
+    getCp(){
+        return $(this.cp);
+    }
+
+    getAddr(){
+        return $(this.addr);
+    }
+
+
+    InitToDOM(){
+
+        $(this.div_content).append(
+            $(this.class).append(this.name) , 
+            $(this.class).append(this.firstname) ,
+            $(this.class).append(this.city) ,
+            $(this.class).append(this.cp) ,
+            $(this.class).append(this.addr) ,
+        );
+
+    }
+
+}
+
+
+</script>
+
+
 <br/>
 <h5>Votre Panier d'articles</h5>
 
 <div id="panier_darticles" style="margin:0 auto">
-<div class="line"></div>
+    <div class="line"></div>
 <br/>
 
 {% for product in user_panier %}
@@ -63,12 +169,197 @@
 
 {% endfor %}
 
+<div>
+    <p style="margin-top:40px" class="shadow_product ttc"> TTC : {{ TTC }} € </p>
+</div>
+<div>
+    {% if user_panier %}
+    
+        <p data-toggle="modal" data-target="#exampleModal" id="paye_product" style="margin-top:40px;margin-right:10px;cursor:pointer" class="shadow_product ttc">Payer</p>
 
-<p style="margin-top:40px" class="shadow_product ttc"> TTC : {{ TTC }} € </p>
+    {% endif %}
+</div>
 
 
+<!-- Modal paye -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Payement</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        
+        <div id="progress">
+        </div>
+
+        <div id="content_paye">
+            <h6 id="title_paye_content">Remplir les champs :</h6>
+
+        </div>
+
+        <div class="categorie_back" id="display_montant"  style="background-color:#007bff;">
+           <p style="padding:5px"> Coût total :  {{ TTC }} € </p>
+        </div>
+
+
+      </div>
+      <div class="modal-footer" >
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" id="info"  value='0' class="btn btn-primary" >Suivant</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 </div>
+
+    <script>
+
+    
+    /// btn form payement  Value info
+    // 0 = data bout user
+    // 1 = go to payement
+
+
+    // init to dom form info to user ///
+    let formPaye = new PayeForm();
+    formPaye.InitToDOM();
+    formPaye.InitStyleCss();
+    ////////////////////////
+
+    var isMobile = (/Mobile/i.test(navigator.userAgent));
+
+    if(isMobile){
+       formPaye.PhoneCSS();        
+
+    }
+
+
+
+
+    let paye = $('#info');
+
+    // get error form about user info and user payement info
+    let errorForm_userData = [];
+
+    //// REGEX /////////////
+    let letters = /^[A-Za-z]+$/;
+    let lettersSpace = /^[A-Za-z ]+$/;
+    let cp_r = /[0-9]{5}/;
+    let addr_r = /[A-Za-z0-9 ]/;
+    /////////////
+
+    $(paye).click(function(e){
+           
+        
+        let name = formPaye.getName();
+        let firstname = formPaye.getFirstname();
+        let city = formPaye.getCity();
+        let cp = formPaye.getCp();
+        let addr = formPaye.getAddr();
+
+        let arrayForm = [name,firstname,city,cp,addr];
+
+        for(var i = 0; i < arrayForm.length; i ++){
+
+            let value = arrayForm[i].val();
+            let input = arrayForm[i];
+
+            input = $(input).attr('name').toLowerCase();
+
+            // check variable give bool if input prototype test is true or false
+            let check;
+            // error msg display in dom to input
+            let small = document.createElement('smal');
+            $(small).attr('id',$(input).attr('name'));
+            small.classList.add("form-text");
+            small.style.color = "red";
+
+
+            switch (input) {
+
+                        case 'name':
+
+                            if(value === ""){
+                                    small.textContent = "Le champ est vide";
+                                    $(`input[name="${input}"`).after( small );
+                                    break;
+                            }
+                           
+                            check = letters.test(value);
+                            console.log(check + " name" )
+                            
+                            
+                            break;
+
+                        case 'firstname':
+
+                            if(value === ""){
+                                        small.textContent = "Le champ est vide";
+                                       $(`input[name="${input}"`).after( small );
+                                        break;
+                            }
+
+                                check = letters.test(value);
+                                console.log(check + " firstname" )
+
+                            break;
+                        case 'city':
+
+                           if(value === ""){
+                                    small.textContent = "Le champ est vide";
+                                    $(`input[name="${input}"`).after( small );
+                                    break;
+                            }
+
+                                check = lettersSpace.test(value);
+                                console.log(check + " for city" )
+                        
+                            break;
+
+                        case 'addr':
+
+                           if(value === ""){
+                                    small.textContent = "Le champ est vide";
+                                    $(`input[name="${input}"`).after( small );
+                                    break;
+                            }
+
+                                check = addr_r.test(value);
+                                console.log(check + " for addresse" )
+                        
+                            break;
+                        case 'cp':
+
+                           if(value === ""){
+                                    small.textContent = "Le champ est vide";
+                                 $(`input[name="${input}"`).after( small );
+                                    break;
+                            }
+
+                                check = cp_r.test(value);
+                                console.log(check + " for code postal" )
+                        
+                            break;
+                    
+                        
+                    }
+            
+                              
+
+
+        }
+
+
+    })
+
+
+
+    </script>
 
 
 

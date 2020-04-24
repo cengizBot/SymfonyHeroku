@@ -21,9 +21,9 @@ class LikeProductRepository extends ServiceEntityRepository
         parent::__construct($registry, LikeProduct::class);
     }
 
-      /**
-     * @return Product[]
-     */
+    /**
+    * @return Product[]
+    */
     public function findByExampleField($id_prod,$id_user)
     {
        
@@ -42,6 +42,24 @@ class LikeProductRepository extends ServiceEntityRepository
     }
 
     /**
+    * @return countlikeProduct[]
+    */
+    public function CountLike($id_product){
+
+        $conn = $this->getEntityManager()->getConnection();
+
+        $sql = "SELECT count(*) FROM like_product WHERE like_product.product_like_id = :id";
+        $stmt = $conn->prepare($sql);
+        $stmt->execute(['id' => $id_product]);
+        
+        $likes = $stmt->fetch();
+
+        return $likes;
+
+    }
+
+
+    /**
      * @return Boolean
      */
     public function likeProduct($id_prod,$id_user)
@@ -55,15 +73,6 @@ class LikeProductRepository extends ServiceEntityRepository
         if(!$check){
             
             $conn = $this->getEntityManager()->getConnection();
-
-            // $stmt = $conn->prepare("INSERT INTO like_product (user_id, product_id) VALUES (?, ?)");
-            // $stmt->bindParam(1, $name);
-            // $stmt->bindParam(2, $value);
-
-            // $name = 8;
-            // $value = 1;
-
-            // $stmt->execute();
 
             $sql = "INSERT INTO like_product (user_id , product_like_id) VALUES (:user_id,:product_id)";
             $stmt = $conn->prepare($sql);

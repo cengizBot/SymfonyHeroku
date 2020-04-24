@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\LikeProduct;
 use App\Entity\Product;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -43,11 +44,23 @@ class ProductController extends AbstractController
 
         
         $session->set('product', $get);
+   
+
+        //get the number of like product
+        $like =  $this->getDoctrine()->getRepository(LikeProduct::class)
+        ->CountLike($session->get('product'));
+
+        $likes = implode("",$like);
+
+
+        // dump($like);
+        // die();
 
         // if found product render page index
         return $this->render('product/index.html.twig', [
             'product' => $product,
-            'panier' => $numbers_product
+            'panier' => $numbers_product,
+            'like' => $likes
         ]);
     }
 

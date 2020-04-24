@@ -34,7 +34,15 @@
         </div>
 
         <div id="like_div">
-
+                Cette article détient <span id="display_like">{{ like }}</span> 
+                <span id="string_like">
+                {% if like <= 1 %}
+                    like
+                {% else %}
+                    likes
+                {% endif %}
+                </span>
+              
                 <form id="like_form" action='' method="post">
                   
                 </form>
@@ -59,7 +67,6 @@
 
 </div>
 
-<button type="button" id="ajaxBtn">Ajax</button>
 
 {% block javascripts %}
         {{ encore_entry_script_tags('front') }}
@@ -122,6 +129,19 @@
                             $('#btn_like').addClass('btn-primary');
                             $('#btn_like').text('Vous aimé ce produit');
                             
+                            // add like number to product
+                            let like = $('#display_like').text();
+                            like = parseInt(like);
+                            like = like + 1;
+
+                            if(like <= 1){
+                                $("#string_like").text('like')
+                            }else{
+                                 $("#string_like").text('likes')
+                            }
+                            $("#display_like").text(like);
+
+                            
                         }
                         
                         
@@ -148,6 +168,18 @@
                             $('#btn_like').addClass('disabled_btn');
                             $('#btn_like').removeClass('btn-primary');
                             $('#btn_like').text('Liker ce produit');
+
+                             // add like number to product
+                            let like = $('#display_like').text();
+                            like = parseInt(like);
+                            like = like - 1;
+                            if(like <= 1){
+                                $("#string_like").text('like')
+                            }else{
+                                 $("#string_like").text('likes')
+                            }
+                            $("#display_like").text(like);
+
                         }
                         
                         
