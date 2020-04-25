@@ -12,13 +12,16 @@ class PayeForm {
     constructor(){
 
         this.class = '<div class="form-group">'
+        ///// Input info about user for payement ////////
         //////////////////////
         this.name = document.createElement('input');
         this.firstname = document.createElement('input');
         this.city = document.createElement('input');
         this.addr = document.createElement('input');
         this.cp = document.createElement('input');
-        //////////////
+        //////////////////////////////////////
+
+
 
         this.div_content = $('#content_paye');
 
@@ -55,7 +58,9 @@ class PayeForm {
         this.cp.setAttribute("name", "cp");
         this.cp.placeholder = "Code Postal";
         this.cp.style.width = "70%";
-         
+
+
+      
 
     }
 
@@ -100,6 +105,22 @@ class PayeForm {
             $(this.class).append(this.cp) ,
             $(this.class).append(this.addr) ,
         );
+
+    }
+
+    // check si les inputs sont remplis renvoie true ou false
+    // true , tous remplis
+    // false , manque certains
+
+    DisabledBtn(){
+
+        if( this.getName().val() != "" && this.getFirstname().val() != "" && this.getCity().val() != "" &&
+            this.getCp().val() != "" && this.getAddr().val() != ""  ){
+
+                return true;
+        }
+
+        return false;
 
     }
 
@@ -209,7 +230,7 @@ class PayeForm {
       </div>
       <div class="modal-footer" >
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" id="info"  value='0' class="btn btn-primary" >Suivant</button>
+        <button type="button" id="info"  value='0' class="btn btn-primary" disabled>Suivant</button>
       </div>
     </div>
   </div>
@@ -239,21 +260,37 @@ class PayeForm {
     }
 
 
-
-
     let paye = $('#info');
 
-    // get error form about user info and user payement info
-    let errorForm_userData = [];
+  
 
     //// REGEX /////////////
     let letters = /^[A-Za-z]+$/;
     let lettersSpace = /^[A-Za-z ]+$/;
-    let cp_r = /[0-9]{5}/;
+    let cp_r = /^[0-9]{5,5}$/;
     let addr_r = /[A-Za-z0-9 ]/;
     /////////////
 
+
+    // evenement sur les inputs à chaque click sur les inputs du formulaire si tous les inputs sont rempli, on remove l'attr disabled du btn form payement 
+    $("input").change(function () {
+        console.log('focus input');
+        let disabled = formPaye.DisabledBtn();
+
+        console.log(disabled);
+
+        // if disabeld true remove attr disabled of button
+        if(disabled){
+            $(paye).removeAttr("disabled");
+        }
+
+    });
+
+
     $(paye).click(function(e){
+
+        // get error form about user info and user payement info
+        let errorForm_userData = [];
            
         
         let name = formPaye.getName();
@@ -264,92 +301,188 @@ class PayeForm {
 
         let arrayForm = [name,firstname,city,cp,addr];
 
-        for(var i = 0; i < arrayForm.length; i ++){
+        $('smal').remove();
 
-            let value = arrayForm[i].val();
-            let input = arrayForm[i];
+        function addErrorForm(input,msg){
 
-            input = $(input).attr('name').toLowerCase();
-
-            // check variable give bool if input prototype test is true or false
-            let check;
-            // error msg display in dom to input
-            let small = document.createElement('smal');
-            $(small).attr('id',$(input).attr('name'));
-            small.classList.add("form-text");
-            small.style.color = "red";
-
-
-            switch (input) {
-
-                        case 'name':
-
-                            if(value === ""){
-                                    small.textContent = "Le champ est vide";
-                                    $(`input[name="${input}"`).after( small );
-                                    break;
-                            }
-                           
-                            check = letters.test(value);
-                            console.log(check + " name" )
-                            
-                            
-                            break;
-
-                        case 'firstname':
-
-                            if(value === ""){
-                                        small.textContent = "Le champ est vide";
-                                       $(`input[name="${input}"`).after( small );
-                                        break;
-                            }
-
-                                check = letters.test(value);
-                                console.log(check + " firstname" )
-
-                            break;
-                        case 'city':
-
-                           if(value === ""){
-                                    small.textContent = "Le champ est vide";
-                                    $(`input[name="${input}"`).after( small );
-                                    break;
-                            }
-
-                                check = lettersSpace.test(value);
-                                console.log(check + " for city" )
-                        
-                            break;
-
-                        case 'addr':
-
-                           if(value === ""){
-                                    small.textContent = "Le champ est vide";
-                                    $(`input[name="${input}"`).after( small );
-                                    break;
-                            }
-
-                                check = addr_r.test(value);
-                                console.log(check + " for addresse" )
-                        
-                            break;
-                        case 'cp':
-
-                           if(value === ""){
-                                    small.textContent = "Le champ est vide";
-                                 $(`input[name="${input}"`).after( small );
-                                    break;
-                            }
-
-                                check = cp_r.test(value);
-                                console.log(check + " for code postal" )
-                        
-                            break;
-                    
-                        
+                errorForm_userData.push([
+                    {
+                        'input' : input,
+                        'msg' : msg
                     }
-            
-                              
+                ]);
+
+        }
+
+        if($(paye).attr('value') === "0"){
+           
+                for(var i = 0; i < arrayForm.length; i ++){
+
+                    let value = arrayForm[i].val();
+                    let input = arrayForm[i];
+
+                    input = $(input).attr('name').toLowerCase();
+
+                    // check variable give bool if input prototype test is true or false
+                    let check;
+                    // error msg display in dom to input
+                    let small = document.createElement('smal');
+                    $(small).attr('id',$(input).attr('name'));
+                    small.classList.add("form-text");
+
+
+                    small.style.color = "red";
+
+
+                    $(`input[name="${input}"`).css('border','');
+
+                    //if check is false error by regex 
+                    // else true np
+
+
+                    switch (input) {
+
+
+                                case 'name':
+
+                                    if(value === ""){
+                                            small.textContent = "Le champ est vide";
+                                            $(`input[name="${input}"`).after( small );
+                                            $(`input[name="${input}"`).css('border','1px solid red');
+                                            addErrorForm(input,'Le champ est vide');
+                                            break;
+                                    }
+                                
+                                    check = letters.test(value);
+                                    
+                                    if(!check){
+                                            small.textContent = "Le champ contient une erreur";
+                                            $(`input[name="${input}"`).after( small );
+                                            $(`input[name="${input}"`).css('border','1px solid red');
+                                            addErrorForm(input,'Le champ contient une erreur');
+                                            break;
+                                    }
+
+                                    $(`input[name="${input}"`).css('border','1px solid green');
+                                    
+                                    
+                                    break;
+
+                                case 'firstname':
+
+                                    if(value === ""){
+                                                small.textContent = "Le champ est vide";
+                                                $(`input[name="${input}"`).after( small );
+                                                $(`input[name="${input}"`).css('border','1px solid red');
+                                                addErrorForm(input,'Le champ est vide'); 
+                                                break;
+                                    }
+
+                                        check = letters.test(value);
+                                    
+                                        if(!check){
+                                            small.textContent = "Le champ contient une erreur";
+                                            $(`input[name="${input}"`).after( small );
+                                            $(`input[name="${input}"`).css('border','1px solid red');
+                                            addErrorForm(input,'Le champ contient une erreur');
+                                            break;
+                                        }
+
+                                        $(`input[name="${input}"`).css('border','1px solid green');
+                                    
+
+                                    break;
+                                case 'city':
+
+                                if(value === ""){
+                                            small.textContent = "Le champ est vide";
+                                            $(`input[name="${input}"`).after( small );
+                                            $(`input[name="${input}"`).css('border','1px solid red');
+                                            addErrorForm(input,'Le champ est vide');
+                                            break;
+                                    }
+
+                                        check = lettersSpace.test(value);
+                                        
+                                        if(!check){
+                                            small.textContent = "Le champ contient une erreur";
+                                            $(`input[name="${input}"`).after( small );
+                                            $(`input[name="${input}"`).css('border','1px solid red');
+                                            addErrorForm(input,'Le champ contient une erreur');
+                                            break;
+                                        }
+
+                                        $(`input[name="${input}"`).css('border','1px solid green');
+                                
+                                    break;
+
+                                case 'addr':
+
+                                if(value === ""){
+                                            small.textContent = "Le champ est vide";
+                                            $(`input[name="${input}"`).after( small );
+                                            $(`input[name="${input}"`).css('border','1px solid red');
+                                            addErrorForm(input,'Le champ est vide');
+                                            break;
+                                    }
+
+                                        check = addr_r.test(value);
+                                        
+                                        if(!check){
+                                            small.textContent = "Le champ contient une erreur";
+                                            $(`input[name="${input}"`).after( small );
+                                            $(`input[name="${input}"`).css('border','1px solid red');
+                                            addErrorForm(input,'Le champ contient une erreur');
+                                            break;
+                                        }
+
+                                        $(`input[name="${input}"`).css('border','1px solid green');
+                                
+                                    break;
+                                case 'cp':
+
+                                if(value === ""){
+                                            small.textContent = "Le champ est vide";
+                                        $(`input[name="${input}"`).after( small );
+                                        $(`input[name="${input}"`).css('border','1px solid red');
+                                        addErrorForm(input,'Le champ est vide');
+                                            break;
+                                    }
+
+                                        check = cp_r.test(value);
+                                        
+                                        if(!check){
+                                            small.textContent = "Le champ contient une erreur";
+                                            $(`input[name="${input}"`).after( small );
+                                            $(`input[name="${input}"`).css('border','1px solid red');
+                                            addErrorForm(input,'Le champ contient une erreur'); 
+                                            break;
+                                        }
+
+                                        $(`input[name="${input}"`).css('border','1px solid green');
+                                
+                                    break;
+                            
+                                
+                            }
+                    
+                                    
+
+
+                }
+
+        
+        }
+
+
+        // if no error in array pass to payement method
+        if(errorForm_userData.length === 0){
+
+           $(paye).attr('value','1');
+
+           // remove all inputs about user data ( 0 )
+           // go to input payement ( 1 )
+           $('.modal-dialog input').fadeOut(2500, function(){ $('.modal-dialog .form-group').remove(); });
 
 
         }
