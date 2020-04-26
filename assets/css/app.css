@@ -83,6 +83,10 @@
     color:white;
 }
 
+.select{
+    border: 1px solid black;
+}
+
 .title_product{
     padding: 5px;
     text-align: center;

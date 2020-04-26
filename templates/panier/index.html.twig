@@ -11,7 +11,8 @@ class PayeForm {
     // input
     constructor(){
 
-        this.class = '<div class="form-group">'
+        this.class = '<div class="form-group">';
+
         ///// Input info about user for payement ////////
         //////////////////////
         this.name = document.createElement('input');
@@ -22,6 +23,16 @@ class PayeForm {
         //////////////////////////////////////
 
 
+        //// Input for payement cb info //////
+        this.numbercode = document.createElement('input');
+        this.expireMonth =  document.createElement('input');
+        this.expireYears =  document.createElement('input');
+        /// code est les 3 chiffres de la carte
+        this.code =  document.createElement('input');
+        //img cb 
+        this.imgCb = document.createElement('img');
+
+        //////////////////////////////////////
 
         this.div_content = $('#content_paye');
 
@@ -60,7 +71,37 @@ class PayeForm {
         this.cp.style.width = "70%";
 
 
-      
+        this.numbercode.classList.add("form-control");
+        this.numbercode.setAttribute("type", "number");
+        this.numbercode.setAttribute("name", "numbercode");
+        this.numbercode.placeholder = "Numéro de la carte";
+        this.numbercode.style.width = "70%";
+        this.numbercode.style.margin = "10px";
+        
+
+        this.expireMonth.classList.add("form-control");
+        this.expireMonth.setAttribute("type", "number");
+        this.expireMonth.setAttribute("name", "expiremonth");
+        this.expireMonth.placeholder = "Mois";
+        this.expireMonth.style.width = "70%";
+        this.expireMonth.style.margin = "10px";
+
+        this.expireYears.classList.add("form-control");
+        this.expireYears.setAttribute("type", "number");
+        this.expireYears.setAttribute("name", "expireyears");
+        this.expireYears.placeholder = "Années";
+        this.expireYears.style.width = "70%";
+        this.expireYears.style.margin = "10px";
+
+        this.code.classList.add("form-control");
+        this.code.setAttribute("type", "number");
+        this.code.setAttribute("name", "cryptogramme");
+        this.code.placeholder = "3 chiffres";
+        this.code.style.width = "70%";
+        this.code.style.margin = "10px";
+
+        this.imgCb.setAttribute("src", "{{ asset("build/images/logo-cb.jpg") }}");
+        this.imgCb.style.width = "100px";
 
     }
 
@@ -71,6 +112,11 @@ class PayeForm {
         this.city.style.width = "100%";
         this.addr.style.width = "100%";
         this.cp.style.width = "100%";
+        
+        this.numbercode.width = "100%";
+        this.expireMonth.width = "100%";
+        this.expireYears.width = "100%";  
+        this.code.width = "100%"; 
 
     }
    
@@ -79,8 +125,18 @@ class PayeForm {
         return $(this.name);
     }
 
+    getImgCb(){
+        return $(this.imgCb);
+    }
+
     getFirstname(){
         return $(this.firstname);
+    }
+
+    //append to class form-group
+    getClass(){
+
+        return $(this.class);
     }
 
     getCity(){
@@ -95,9 +151,26 @@ class PayeForm {
         return $(this.addr);
     }
 
+    getNumberCode(){
+        return $(this.numbercode);
+    }
 
+    getExpireMonth(){
+        return $(this.expireMonth);
+    }
+
+    getExpireYears(){
+        return $(this.expireYears);
+    }
+
+    getCode(){
+        return $(this.code);
+    }
+
+
+   // init form about user info
     InitToDOM(){
-
+        //init for about user info
         $(this.div_content).append(
             $(this.class).append(this.name) , 
             $(this.class).append(this.firstname) ,
@@ -106,6 +179,25 @@ class PayeForm {
             $(this.class).append(this.addr) ,
         );
 
+    }
+
+    //init about payement user info
+    InitCBToDOM(){
+     
+           
+        $(this.div_content).append(
+            this.imgCb,
+            this.numbercode , 
+            this.expireMonth ,
+            this.expireYears ,
+            this.code
+        );
+
+    }
+
+    ParentDiv(){
+        
+        return $(this.div_content);
     }
 
     // check si les inputs sont remplis renvoie true ou false
@@ -268,6 +360,7 @@ class PayeForm {
     let letters = /^[A-Za-z]+$/;
     let lettersSpace = /^[A-Za-z ]+$/;
     let cp_r = /^[0-9]{5,5}$/;
+    let int_r = /[0-9]{16}/;
     let addr_r = /[A-Za-z0-9 ]/;
     /////////////
 
@@ -289,8 +382,15 @@ class PayeForm {
 
     $(paye).click(function(e){
 
-        // get error form about user info and user payement info
+        // get error form about user info
         let errorForm_userData = [];
+        // get error form about user payement info
+        let errorForm_userPayementData = [{
+
+            "selectCard" : false
+            
+            
+        }];
            
         
         let name = formPaye.getName();
@@ -301,7 +401,6 @@ class PayeForm {
 
         let arrayForm = [name,firstname,city,cp,addr];
 
-        $('smal').remove();
 
         function addErrorForm(input,msg){
 
@@ -315,6 +414,11 @@ class PayeForm {
         }
 
         if($(paye).attr('value') === "0"){
+
+            $('smal').remove();
+
+            console.log('---- 0');
+            $('#title_paye_content').text('Remplir les champs :');
            
                 for(var i = 0; i < arrayForm.length; i ++){
 
@@ -329,11 +433,7 @@ class PayeForm {
                     let small = document.createElement('smal');
                     $(small).attr('id',$(input).attr('name'));
                     small.classList.add("form-text");
-
-
                     small.style.color = "red";
-
-
                     $(`input[name="${input}"`).css('border','');
 
                     //if check is false error by regex 
@@ -471,6 +571,9 @@ class PayeForm {
 
                 }
 
+            if(errorForm_userData.length === 0){
+                  $('.modal-dialog input').fadeOut(1500, function(){ $('.modal-dialog .form-group').remove(); });
+            }
         
         }
 
@@ -478,14 +581,134 @@ class PayeForm {
         // if no error in array pass to payement method
         if(errorForm_userData.length === 0){
 
+          $('#title_paye_content').text('Choisir un mode de payement  :');
+
            $(paye).attr('value','1');
+
+           $(paye).text('Payer');
 
            // remove all inputs about user data ( 0 )
            // go to input payement ( 1 )
-           $('.modal-dialog input').fadeOut(2500, function(){ $('.modal-dialog .form-group').remove(); });
+         
+           setTimeout(function(){
+               
+                formPaye.InitCBToDOM();
+
+           },1500);
+
+           formPaye.getImgCb().click(function(){
+
+                formPaye.getImgCb().addClass('select');
+                errorForm_userPayementData[0].selectCard = true;
+
+           });
+
+           
+        if($(paye).attr('value') === "1"){
+           
+
+            $(paye).click(function(){
+
+                    $('smal').remove();
+
+                    console.log('enter')
+
+                    let num = formPaye.getNumberCode();
+                    let expir_m = formPaye.getExpireMonth();
+                    let expir_y = formPaye.getExpireYears();
+                    let cd = formPaye.getCode();
+                 
+
+                    let arrayFormCB = [num , expir_m , expir_y , cd ];
+
+                    for(var i = 0; i < arrayFormCB.length; i ++){
+                     
+                        let value = arrayFormCB[i].val();
+                        let input = arrayFormCB[i];
+
+                        input = $(input).attr('name').toLowerCase();
+
+                        // check variable give bool if input prototype test is true or false
+                        let check;
+                        // error msg display in dom to input
+                        let small = document.createElement('smal');
+                        $(small).attr('id',$(input).attr('name'));
+                        small.classList.add("form-text");
+                        small.style.color = "red";
+                        $(`input[name="${input}"`).css('border','');
+
+                        
+                        //if check is false error by regex 
+                        // else true np
+                         switch (input) {
+                                
+                                case 'numbercode':
+                                    if(value === ""){
+                                            small.textContent = "Le champ est vide";
+                                            $(`input[name="${input}"`).after( small );
+                                            $(`input[name="${input}"`).css('border','1px solid red');
+                                            addErrorForm(input,'Le champ est vide');
+                                            break;
+                                    }
+                                
+                                    check = int_r.test(value);
+                                    console.log(check)
+                                    
+                                    if(!check){
+                                            small.textContent = "Le champ contient une erreur";
+                                            $(`input[name="${input}"`).after( "erreur" );
+                                            $(`input[name="${input}"`).css('border','1px solid red');
+                                            addErrorForm(input,'Le champ contient une erreur');
+                                            break;
+                                    }
+
+                                    $(`input[name="${input}"`).css('border','1px solid green');
+                                    
+                                    
+                                    break;
+
+                                case 'expiremonth':
+                                    console.log(value);
+                                    if(value === ""){
+                                        console.log('***********')
+                                            small.textContent = "Le champ est vide";
+                                            $(`input[name="${input}"`).after( small );
+                                            $(`input[name="${input}"`).css('border','1px solid red');
+                                            addErrorForm(input,'Le champ est vide');
+                                            break;
+                                    }
+                                
+                                    check = int_r.test(value);
+                                    console.log(check)
+                                    
+                                    if(!check){
+                                            small.textContent = "Le champ contient une erreur";
+                                            $(`input[name="${input}"`).after( small );
+                                            $(`input[name="${input}"`).css('border','1px solid red');
+                                            addErrorForm(input,'Le champ contient une erreur');
+                                            break;
+                                    }
+
+                                    $(`input[name="${input}"`).css('border','1px solid green');
+                                    
+                                    
+                                    break;
+
+                        }
+                    }
+
+                
+
+
+            })
 
 
         }
+
+
+        }
+
+
 
 
     })
