@@ -678,7 +678,7 @@ class PayeForm {
                                             addErrorForm(errorForm_userPayementData,input,'Le champ est vide');
                                             break;
                                     }
-                                
+                         
                                     check = int_month_r.test(value);
                                  
                                     
@@ -687,6 +687,16 @@ class PayeForm {
                                             $(`input[name="${input}"`).after( small );
                                             $(`input[name="${input}"`).css('border','1px solid red');
                                             addErrorForm(errorForm_userPayementData,input,'Le champ contient une erreur');
+                                            break;
+                                    }
+
+                                    
+
+                                    if(value < 1 || value > 12){
+                                            small.textContent = "Le mois est faux";
+                                            $(`input[name="${input}"`).after( small );
+                                            $(`input[name="${input}"`).css('border','1px solid red');
+                                            addErrorForm(errorForm_userPayementData,input,'Le mois est faux');
                                             break;
                                     }
 
@@ -714,6 +724,27 @@ class PayeForm {
                                             $(`input[name="${input}"`).after( small );
                                             $(`input[name="${input}"`).css('border','1px solid red');
                                             addErrorForm(errorForm_userPayementData,input,'Le champ contient une erreur');
+                                            break;
+                                    }
+
+
+                                    var d = new Date();
+                                    var n = d.getFullYear();
+                                    var t = n.toString()
+                                    n = t[2] + t[3];
+                                    n = parseInt(n);
+
+                                    function r(int){
+                                         if(value >= n  || value < n + 5){
+                                            console.log('date fausseeeeeeeeee')
+                                         }
+                                    }
+
+                                    if(value < n  || value > n + 5){
+                                            small.textContent = "L'année est fausse";
+                                            $(`input[name="${input}"`).after( small );
+                                            $(`input[name="${input}"`).css('border','1px solid red');
+                                            addErrorForm(errorForm_userPayementData,input,'Le mois est faux');
                                             break;
                                     }
 
@@ -759,6 +790,8 @@ class PayeForm {
                     if(errorForm_userData.length === 0 && errorForm_userPayementData.length === 1 ){
                         console.log('post data in DB');
                         console.log(errorForm_userPayementData);
+
+
                         
                         $.ajax({
                                 method: "POST",
