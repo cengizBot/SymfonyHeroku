@@ -34,7 +34,9 @@ class PanierController extends AbstractController
         }else{
             $panier = 0;
         }
-       
+
+
+        $session->set('TTC' , $TTC);       
     
     
         return $this->render('panier/index.html.twig', [

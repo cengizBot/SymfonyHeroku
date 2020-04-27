@@ -113,10 +113,10 @@ class PayeForm {
         this.addr.style.width = "100%";
         this.cp.style.width = "100%";
         
-        this.numbercode.width = "100%";
-        this.expireMonth.width = "100%";
-        this.expireYears.width = "100%";  
-        this.code.width = "100%"; 
+        this.numbercode.style.width = "100%";
+        this.expireMonth.style.width = "100%";
+        this.expireYears.style.width = "100%";  
+        this.code.style.width = "100%"; 
 
     }
    
@@ -360,7 +360,18 @@ class PayeForm {
     let letters = /^[A-Za-z]+$/;
     let lettersSpace = /^[A-Za-z ]+$/;
     let cp_r = /^[0-9]{5,5}$/;
-    let int_r = /[0-9]{16}/;
+        // credit card number
+    let int_card_r = /^[0-9]{16,16}$/;
+        // credit card month
+    let int_month_r = /^[0-9]{2,2}$/;
+        // credit card years
+    let int_years_r = /^[0-9]{2,2}$/;
+        // credit card cryptogramme
+    let int_crypto_r = /^[0-9]{3,3}$/;
+
+    // just int
+    let int_r = /[0-9]/;
+    // addresse
     let addr_r = /[A-Za-z0-9 ]/;
     /////////////
 
@@ -387,7 +398,7 @@ class PayeForm {
         // get error form about user payement info
         let errorForm_userPayementData = [{
 
-            "selectCard" : false
+            "selectCard" : true
             
             
         }];
@@ -402,9 +413,9 @@ class PayeForm {
         let arrayForm = [name,firstname,city,cp,addr];
 
 
-        function addErrorForm(input,msg){
+        function addErrorForm(array,input,msg){
 
-                errorForm_userData.push([
+                array.push([
                     {
                         'input' : input,
                         'msg' : msg
@@ -449,7 +460,7 @@ class PayeForm {
                                             small.textContent = "Le champ est vide";
                                             $(`input[name="${input}"`).after( small );
                                             $(`input[name="${input}"`).css('border','1px solid red');
-                                            addErrorForm(input,'Le champ est vide');
+                                            addErrorForm(errorForm_userData,input,'Le champ est vide');
                                             break;
                                     }
                                 
@@ -459,7 +470,7 @@ class PayeForm {
                                             small.textContent = "Le champ contient une erreur";
                                             $(`input[name="${input}"`).after( small );
                                             $(`input[name="${input}"`).css('border','1px solid red');
-                                            addErrorForm(input,'Le champ contient une erreur');
+                                            addErrorForm(errorForm_userData,input,'Le champ contient une erreur');
                                             break;
                                     }
 
@@ -474,7 +485,7 @@ class PayeForm {
                                                 small.textContent = "Le champ est vide";
                                                 $(`input[name="${input}"`).after( small );
                                                 $(`input[name="${input}"`).css('border','1px solid red');
-                                                addErrorForm(input,'Le champ est vide'); 
+                                                addErrorForm(errorForm_userData,input,'Le champ est vide'); 
                                                 break;
                                     }
 
@@ -484,7 +495,7 @@ class PayeForm {
                                             small.textContent = "Le champ contient une erreur";
                                             $(`input[name="${input}"`).after( small );
                                             $(`input[name="${input}"`).css('border','1px solid red');
-                                            addErrorForm(input,'Le champ contient une erreur');
+                                            addErrorForm(errorForm_userData,input,'Le champ contient une erreur');
                                             break;
                                         }
 
@@ -498,7 +509,7 @@ class PayeForm {
                                             small.textContent = "Le champ est vide";
                                             $(`input[name="${input}"`).after( small );
                                             $(`input[name="${input}"`).css('border','1px solid red');
-                                            addErrorForm(input,'Le champ est vide');
+                                            addErrorForm(errorForm_userData,input,'Le champ est vide');
                                             break;
                                     }
 
@@ -508,7 +519,7 @@ class PayeForm {
                                             small.textContent = "Le champ contient une erreur";
                                             $(`input[name="${input}"`).after( small );
                                             $(`input[name="${input}"`).css('border','1px solid red');
-                                            addErrorForm(input,'Le champ contient une erreur');
+                                            addErrorForm(errorForm_userData,input,'Le champ contient une erreur');
                                             break;
                                         }
 
@@ -522,7 +533,7 @@ class PayeForm {
                                             small.textContent = "Le champ est vide";
                                             $(`input[name="${input}"`).after( small );
                                             $(`input[name="${input}"`).css('border','1px solid red');
-                                            addErrorForm(input,'Le champ est vide');
+                                            addErrorForm(errorForm_userData,input,'Le champ est vide');
                                             break;
                                     }
 
@@ -532,7 +543,7 @@ class PayeForm {
                                             small.textContent = "Le champ contient une erreur";
                                             $(`input[name="${input}"`).after( small );
                                             $(`input[name="${input}"`).css('border','1px solid red');
-                                            addErrorForm(input,'Le champ contient une erreur');
+                                            addErrorForm(errorForm_userData,input,'Le champ contient une erreur');
                                             break;
                                         }
 
@@ -545,7 +556,7 @@ class PayeForm {
                                             small.textContent = "Le champ est vide";
                                         $(`input[name="${input}"`).after( small );
                                         $(`input[name="${input}"`).css('border','1px solid red');
-                                        addErrorForm(input,'Le champ est vide');
+                                        addErrorForm(errorForm_userData,input,'Le champ est vide');
                                             break;
                                     }
 
@@ -555,7 +566,7 @@ class PayeForm {
                                             small.textContent = "Le champ contient une erreur";
                                             $(`input[name="${input}"`).after( small );
                                             $(`input[name="${input}"`).css('border','1px solid red');
-                                            addErrorForm(input,'Le champ contient une erreur'); 
+                                            addErrorForm(errorForm_userData,input,'Le champ contient une erreur'); 
                                             break;
                                         }
 
@@ -590,24 +601,14 @@ class PayeForm {
            // remove all inputs about user data ( 0 )
            // go to input payement ( 1 )
          
-           setTimeout(function(){
-               
-                formPaye.InitCBToDOM();
+           formPaye.InitCBToDOM();
 
-           },1500);
+  
 
-           formPaye.getImgCb().click(function(){
-
-                formPaye.getImgCb().addClass('select');
-                errorForm_userPayementData[0].selectCard = true;
-
-           });
-
-           
         if($(paye).attr('value') === "1"){
+
            
 
-            $(paye).click(function(){
 
                     $('smal').remove();
 
@@ -640,25 +641,25 @@ class PayeForm {
                         
                         //if check is false error by regex 
                         // else true np
-                         switch (input) {
+                        switch (input) {
                                 
                                 case 'numbercode':
                                     if(value === ""){
                                             small.textContent = "Le champ est vide";
                                             $(`input[name="${input}"`).after( small );
                                             $(`input[name="${input}"`).css('border','1px solid red');
-                                            addErrorForm(input,'Le champ est vide');
+                                            addErrorForm(errorForm_userPayementData,input,'Le champ est vide');
                                             break;
                                     }
                                 
-                                    check = int_r.test(value);
-                                    console.log(check)
+                                    check = int_card_r.test(value);
+                                  
                                     
                                     if(!check){
-                                            small.textContent = "Le champ contient une erreur";
-                                            $(`input[name="${input}"`).after( "erreur" );
+                                            small.textContent = "Le champ doit contenir 16 chiffres";
+                                            $(`input[name="${input}"`).after( small);
                                             $(`input[name="${input}"`).css('border','1px solid red');
-                                            addErrorForm(input,'Le champ contient une erreur');
+                                            addErrorForm(errorForm_userPayementData,input,'Le champ contient une erreur');
                                             break;
                                     }
 
@@ -668,24 +669,24 @@ class PayeForm {
                                     break;
 
                                 case 'expiremonth':
-                                    console.log(value);
+                                  
                                     if(value === ""){
-                                        console.log('***********')
+                                     
                                             small.textContent = "Le champ est vide";
                                             $(`input[name="${input}"`).after( small );
                                             $(`input[name="${input}"`).css('border','1px solid red');
-                                            addErrorForm(input,'Le champ est vide');
+                                            addErrorForm(errorForm_userPayementData,input,'Le champ est vide');
                                             break;
                                     }
                                 
-                                    check = int_r.test(value);
-                                    console.log(check)
+                                    check = int_month_r.test(value);
+                                 
                                     
                                     if(!check){
-                                            small.textContent = "Le champ contient une erreur";
+                                            small.textContent = "Le champ doit contenir 2 chiffres";
                                             $(`input[name="${input}"`).after( small );
                                             $(`input[name="${input}"`).css('border','1px solid red');
-                                            addErrorForm(input,'Le champ contient une erreur');
+                                            addErrorForm(errorForm_userPayementData,input,'Le champ contient une erreur');
                                             break;
                                     }
 
@@ -694,13 +695,89 @@ class PayeForm {
                                     
                                     break;
 
+                                case 'expireyears':
+                                  
+                                    if(value === ""){
+                                        console.log('***********')
+                                            small.textContent = "Le champ est vide";
+                                            $(`input[name="${input}"`).after( small );
+                                            $(`input[name="${input}"`).css('border','1px solid red');
+                                            addErrorForm(errorForm_userPayementData,input,'Le champ est vide');
+                                            break;
+                                    }
+                                
+                                    check = int_years_r.test(value);
+                                   
+                                    
+                                    if(!check){
+                                            small.textContent = "Le champ doit contenir 2 chiffres";
+                                            $(`input[name="${input}"`).after( small );
+                                            $(`input[name="${input}"`).css('border','1px solid red');
+                                            addErrorForm(errorForm_userPayementData,input,'Le champ contient une erreur');
+                                            break;
+                                    }
+
+                                    $(`input[name="${input}"`).css('border','1px solid green');
+                                    
+                                    
+                                    break;
+
+                                case 'cryptogramme':
+                                 
+                                    if(value === ""){
+                                        console.log('***********')
+                                            small.textContent = "Le champ est vide";
+                                            $(`input[name="${input}"`).after( small );
+                                            $(`input[name="${input}"`).css('border','1px solid red');
+                                            addErrorForm(errorForm_userPayementData,input,'Le champ est vide');
+                                            break;
+                                    }
+                                
+                                    check = int_crypto_r.test(value);
+                                    
+                                    
+                                    if(!check){
+                                            small.textContent = "Le champ doit contenir 3 chiffres";
+                                            $(`input[name="${input}"`).after( small );
+                                            $(`input[name="${input}"`).css('border','1px solid red');
+                                            addErrorForm(errorForm_userPayementData,input,'Le champ contient une erreur');
+                                            break;
+                                    }
+
+                                    $(`input[name="${input}"`).css('border','1px solid green');
+                                    
+                                    
+                                    break;
                         }
                     }
 
-                
+
+                 // if no error in array errorForm_userPayementData and errorForm_userData and selectCard is true post in db
+                    // else error
+                    console.log(errorForm_userData)
+                    console.log(errorForm_userPayementData)
+                    if(errorForm_userData.length === 0 && errorForm_userPayementData.length === 1 ){
+                        console.log('post data in DB');
+                        console.log(errorForm_userPayementData);
+                        
+                        $.ajax({
+                                method: "POST",
+                                url: "/payement",
+                                success: function(data){
+                                    
+                                    if(data){
+                                        window.location.reload();
+                                    }
+                                
+                                },
+                                error: function(xhr, status, error){
+                                    console.log(xhr, status, error);
+                                }
+                        });
 
 
-            })
+                    }
+
 
 
         }
@@ -709,7 +786,7 @@ class PayeForm {
         }
 
 
-
+                  
 
     })
 
