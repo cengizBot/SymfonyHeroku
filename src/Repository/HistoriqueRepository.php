@@ -45,7 +45,7 @@ class HistoriqueRepository extends ServiceEntityRepository
 
             ]);
             
-            return true;
+            return $id = $conn->lastInsertId();;
     }
 
 

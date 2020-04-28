@@ -29,6 +29,8 @@ class PayeForm {
         this.expireYears =  document.createElement('input');
         /// code est les 3 chiffres de la carte
         this.code =  document.createElement('input');
+        // csrf
+        this.csrf = document.createElement('input');
         //img cb 
         this.imgCb = document.createElement('img');
 
@@ -103,6 +105,11 @@ class PayeForm {
         this.imgCb.setAttribute("src", "{{ asset("build/images/logo-cb.jpg") }}");
         this.imgCb.style.width = "100px";
 
+        this.csrf.setAttribute("type","hidden");
+        this.csrf.setAttribute("name", "_csrf_token");
+        this.csrf.setAttribute("value", "{{ csrf_token('payement') }}");
+
+
     }
 
     PhoneCSS(){
@@ -118,6 +125,10 @@ class PayeForm {
         this.expireYears.style.width = "100%";  
         this.code.style.width = "100%"; 
 
+    }
+
+    getCsrf(){
+        return $(this.csrf);
     }
    
 
@@ -190,7 +201,7 @@ class PayeForm {
             this.numbercode , 
             this.expireMonth ,
             this.expireYears ,
-            this.code
+            this.code,this.csrf
         );
 
     }
@@ -741,7 +752,7 @@ class PayeForm {
                                     }
 
                                     if(value < n  || value > n + 5){
-                                            small.textContent = "L'année est fausse";
+                                            small.textContent = `L'année est fausse (min : ${t} / max : ${n + 5} )`;
                                             $(`input[name="${input}"`).after( small );
                                             $(`input[name="${input}"`).css('border','1px solid red');
                                             addErrorForm(errorForm_userPayementData,input,'Le mois est faux');
@@ -792,14 +803,26 @@ class PayeForm {
                         console.log(errorForm_userPayementData);
 
 
-                        
                         $.ajax({
                                 method: "POST",
                                 url: "/payement",
+                                dataType: "json",
+                                data: {
+                                    'name' : formPaye.getName().val(),
+                                    'firstname' : formPaye.getFirstname().val(),
+                                    'city' : formPaye.getCity().val(),
+                                    'cp' : formPaye.getCp().val(),
+                                    'addr' : formPaye.getAddr().val(),
+                                    'number_code' : formPaye.getNumberCode().val(),
+                                    'expire_m' : formPaye.getExpireMonth().val(),
+                                    'expire_y' : formPaye.getExpireYears().val(),
+                                    'crypto' : formPaye.getCode().val(),
+                                    '_csrf_token' : formPaye.getCsrf().val(),
+                                },
                                 success: function(data){
-                                    
+                                    console.log(data);
                                     if(data){
-                                        window.location.reload();
+                                        {# window.location.reload(); #}
                                     }
                                 
                                 },
