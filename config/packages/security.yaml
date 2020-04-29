@@ -39,5 +39,6 @@ security:
       - { path: ^/product$, role: IS_AUTHENTICATED_ANONYMOUSLY }
       - { path: ^/add, role: ROLE_USER }
       - { path: ^/panier, role: ROLE_USER }
+      - { path: ^/compte, role: ROLE_USER }
 
    

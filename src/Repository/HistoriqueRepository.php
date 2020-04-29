@@ -48,6 +48,23 @@ class HistoriqueRepository extends ServiceEntityRepository
             return $id = $conn->lastInsertId();;
     }
 
+    public function test($user_id){
+
+        $conn = $this->getEntityManager()->getConnection();
+
+        $sql = "SELECT * FROM historique,payement WHERE historique.user_id = :user_id AND historique.id = payement.historique_id";
+        $stmt = $conn->prepare($sql);
+        $stmt->execute([
+            'user_id' => $user_id
+        ]);
+        
+        $result = $stmt->fetchAll();
+
+        return $result;
+
+    }
+
+
 
     // /**
     //  * @return Historique[] Returns an array of Historique objects

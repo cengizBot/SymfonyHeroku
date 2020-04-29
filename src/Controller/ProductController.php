@@ -84,7 +84,7 @@ class ProductController extends AbstractController
 
         // add failed not product found
         if(!$product){
-           return false;
+            return $this->redirectToRoute('product',['id' => $product->getId()]);  
         }     
 
         $array_panier = [];
