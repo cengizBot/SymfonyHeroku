@@ -73,7 +73,7 @@ class PayementController extends AbstractController
 
                 $session->set('panier',null);
             
-                return $this->json(['buy' => $expirY ]);
+                return $this->json(['buy' => true ]);
         }
 
 

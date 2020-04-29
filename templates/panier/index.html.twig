@@ -34,6 +34,14 @@ class PayeForm {
         //img cb 
         this.imgCb = document.createElement('img');
 
+
+        ///// loader ////////
+        this.loader = document.createElement('img');
+        this.succes = document.createElement('img');
+        // text for loader
+        this.txt = document.createElement('p');
+        //////////////////
+
         //////////////////////////////////////
 
         this.div_content = $('#content_paye');
@@ -110,6 +118,19 @@ class PayeForm {
         this.csrf.setAttribute("value", "{{ csrf_token('payement') }}");
 
 
+        this.loader.setAttribute("src", "{{ asset("build/images/loader.gif") }}");
+        this.loader.setAttribute('id' , 'loader');
+        this.loader.classList.add("loader");
+
+        this.succes.setAttribute("src", "{{ asset("build/images/succes.png") }}");
+        this.succes.setAttribute('id' , 'succes');
+        this.succes.classList.add("loader");
+        this.succes.style.marginBottom = "50px";
+
+        this.txt.style.textAlign = "center";
+        this.txt.style.marginBottom = "50px";
+
+
     }
 
     PhoneCSS(){
@@ -127,10 +148,22 @@ class PayeForm {
 
     }
 
+    getTxt(){
+        return $(this.txt);
+    }
+
+    getSucces(){
+        return $(this.succes);
+    }
     getCsrf(){
         return $(this.csrf);
     }
    
+
+    getLoader(){
+
+        return $(this.loader);
+    }
 
     getName(){
         return $(this.name);
@@ -820,9 +853,57 @@ class PayeForm {
                                     '_csrf_token' : formPaye.getCsrf().val(),
                                 },
                                 success: function(data){
-                                    console.log(data);
-                                    if(data){
-                                        {# window.location.reload(); #}
+                                    
+                                                                  
+                                    if(data.buy){
+                                        let div = formPaye.ParentDiv();
+                                        $(div).empty();
+
+                                        let loader = formPaye.getLoader();
+                                        let txt = formPaye.getTxt();
+                                        let succes = formPaye.getSucces();
+
+                                        $(div).append(loader);
+
+                                        
+                                        // l'animation va durer 7 secondes
+                                        let time = 0;
+
+                                        setInterval(function(){
+
+                                            time = time + 1;
+
+                                            if(time === 1 ){
+                                                
+                                                $(div).append($(txt).text('Chargement de votre commande .'));
+                                            }
+
+                                            if(time === 2 ){
+                                                $(div).append($(txt).text('Chargement de votre commande ..'));
+                                            }
+
+                                            if(time === 3 ){
+                                                 $(div).append($(txt).text('Chargement de votre commande ...'));
+                                            }
+
+                                            if(time === 4 ){
+                                               $(div).append( $(txt).text('Votre commande a été validée') );
+                                            }
+
+                                            if(time === 6 ){
+                                                $(loader).remove();
+                                                $(txt).remove();
+                                                $(div).append(succes);
+                                            }
+
+                                            if( time === 7 ){
+                                                window.location.reload();
+                                            }
+
+
+                                        }, 1000)
+
+
                                     }
                                 
                                 },
