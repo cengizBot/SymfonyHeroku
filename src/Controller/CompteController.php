@@ -31,18 +31,13 @@ class CompteController extends AbstractController
             array_push($arrayRef,$value['reference_id']);
         }
 
-        foreach ($test as $key => $value) {
-            // dump($test);
-        }
-
-
         $arrayRef = array_unique($arrayRef);
         
         $arrayRef = array_values($arrayRef);
 
         //final array post to template
         $newArray = [];
-        dump($test);
+
 
         for($i = 0; $i < count($arrayRef); $i ++){
 
@@ -56,12 +51,12 @@ class CompteController extends AbstractController
                         // key exist post in array key
 
                         $number = count($newArray[$arrayRef[$i]]);
-                        $key =  [ "commande$number" => [ $test[$j] ] ];
-                        $newArray[$arrayRef[$i]] +=  $key;
+                        $key =   $test[$j];
+                        array_push($newArray[$arrayRef[$i]],$key);
 
                     }else{
                         // key not exist post in array with create key
-                        $key =  [ $arrayRef[$i] => [ "commande" => [ "0" => $test[$j] ] ] ];
+                        $key =  [ $arrayRef[$i] => [  $test[$j] ] ];
                         $newArray +=  $key;
                     }
 
@@ -70,13 +65,11 @@ class CompteController extends AbstractController
             }
 
         }
-        dump($newArray);
-
-        die();
 
 
         return $this->render('compte/index.html.twig', [
-            'panier' => $numbers_product
+            'panier' => $numbers_product,
+            "commandes" =>$newArray
         ]);
     }
 }

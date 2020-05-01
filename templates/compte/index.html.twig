@@ -4,6 +4,84 @@
 
 {% block body %}
 
+{% set ref_key = [] %}
+{% set i = 0  %}
 
+<div style="margin-top:100px">
+
+<h5>Historique</h5>
+<div class="line"></div><br/>
+{% for key, commande in commandes %}
+     
+         <div id="{{key}}_div" class="shadow_product" style="margin:5px;margin-top:10px">
+              <div id="div_header" style="padding: 10px;">
+                          {% for i in 0..0 %}
+                            <p>  Commande effectuée le   {{ commande[i].date_buy|date("m/d/Y à H:i" , "Europe/Paris")  }} | Nombres d'articles : {{ commande[i].number_article }} 
+                            <a style="float:right;margin-right:10px" href="#more" class="more">Voir plus</a>
+                            </p>
+
+                        
+              </div>
+              
+              <div id="{{key}}" style="display:none">
+                          {% endfor %}   
+                    {% set count = commande|length  %}
+                          
+                    {% for i in 0.. count -1 %}
+                        <div style="margin:20px">
+                         <img style="width:30px" src="{{asset('build/images/product/') ~ commande[i].image }}">
+                          Produit : {{ commande[i].name }} |
+                          {% if (commande[i].number_article > 1) %}
+                          Nombres d'articles
+                          {% else %}
+                          Nombre d'article 
+                          {% endif %}
+                          : {{ commande[i].number_article }} 
+                        </div>
+                    {% endfor %}
+                    <div style="margin:20px" id="cb_display">
+                     <img style="width:30px" src="{{asset('build/images/logo-cb.jpg') }}">
+                      Numéro Carte : {{ commande[i].number_card }}
+                    </div><br/>
+                           
+                      
+                    
+              </div>
+
+          </div>
+
+{% endfor %}
+
+</div>
+
+
+<script>
+
+  $('.more').each(function(index){
+    
+      $(this).click(function(){
+     
+          let parent = $(this).parent().parent();
+          let next = $(parent).next();
+          $( next ).show( "slow", function() {
+          // Animation complete.
+          });
+
+      })
+  })
+ 
+
+</script>
+
+
+{# {% for test in ref_key %}
+    
+    {% set i = i + 1  %}
+        <li>{{ test }}</li>
+
+    {{ dump(commandes[test]) }}
+           
+
+{% endfor %} #}
 
 {% endblock %}
