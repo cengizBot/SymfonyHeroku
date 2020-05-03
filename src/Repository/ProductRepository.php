@@ -19,6 +19,25 @@ class ProductRepository extends ServiceEntityRepository
         parent::__construct($registry, Product::class);
     }
 
+    /**
+    * @return Product[] Returns an array of Product objects for search bar
+    */
+    public function SearchProduct($string){
+
+        $conn = $this->getEntityManager()->getConnection();
+
+        $sql = "SELECT * FROM product WHERE product.name LIKE :product ";
+        $stmt = $conn->prepare($sql);
+        $stmt->execute([
+            "product" => "%$string%"
+        ]);
+        
+        $result = $stmt->fetchAll();
+
+        return $result;
+
+    }
+
     // /**
     //  * @return Product[] Returns an array of Product objects
     //  */

@@ -7,8 +7,8 @@
 <div class="" id="div_header_discount" style="margin-top:50px;text-align:center">
 
         <img style="width:50px;display: inline-block" src="{{asset('build/images/logo.png')}}" title="my image" alt="My image"> 
-        <input class="form-control mr-sm-2" style="width:50%;margin-left:50px;margin-top:5px;display: inline-block" type="search" id="search_product" placeholder="Rechercher">
-        <img style="display: inline-block;width:35px;margin-top:-5px;background-color:#007bff!important;padding:5px;border-radius:5px;cursor:pointer" src="{{asset('build/images/search.png')}}" title="search" alt="search"> 
+        <input class="form-control mr-sm-2 input_search" type="search" id="search_product" placeholder="Rechercher">
+        <img style="display: inline-block;width:35px;margin-top:-5px;background-color:#007bff!important;padding:5px;border-radius:5px;cursor:pointer" src="{{asset('build/images/search.png')}}" title="search_icon" alt="search"> 
 </div>
 
 
@@ -90,6 +90,11 @@
 </div>
 </div>
 
+<div class="div_search" id="div_search_product" style="display:none">
+dzad
+</div>
+
+
 
 <script>
 
@@ -102,8 +107,83 @@
                 $(this).css('margin','0 auto');
 
         })
+        console.log('mobile');
+
+        let input = $("#search_product");
+        let div_search_p = ('#div_search_product');
+        
+        $(input).css("margin-left","0px");
+        $(input).css('width','60%');
+
+        $(div_search_p).css('width','100%');
+        $(div_search_p).css('left','0%');
+        $(div_search_p).css('right','0%');
 
     }
+
+    //event input search
+    $('#search_product').keyup(function(){
+            
+            let search =  $('#search_product').val();
+            let cross = $('<p style="float:right;margin-right:10px;cursor:pointer">Fermer</p>')
+            let div_parent = $('#div_search_product');
+            
+            $(cross).click(function(){
+
+                   $(div_parent).css('display','none');
+
+            });
+
+             $.ajax({
+                 method: "POST",
+                 url: "/searchProduct",
+                 typeData: 'json',
+                 data: {
+                        "search_p" : search
+                 },
+                 success: function(data){
+
+                       
+                        $(div_parent).empty();
+                        $(div_parent).append(cross);
+
+                        if(search === null || search === ""){
+                                $(div_parent).css('display','none');
+                                console.log('----');
+                        }else{
+                               
+                                if(data.product.length != 0){
+                                        console.log('FIND');
+
+                                        $(div_parent).css('display','block');
+                                        data.product.forEach((item, index) => {
+                                               
+                                                let div = $('<div style="margin:5px">');
+                                                
+                                                let p = $(`<a href="product/${item.id}"><p>Produit : ${item.name} || Prix : ${item.price}</p></a>`);
+                                
+                                                $(div).append(p);
+                                                $(div_parent).append(div);
+                                        
+                                        })
+
+                                }else{
+                                        $(div_parent).css('display','none');
+                                }
+                        }
+                        
+
+
+                 },
+                 error: function(error){
+
+                        console.log(error);
+                         
+                 }
+                
+             })
+
+    })
 
 
 </script>

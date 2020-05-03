@@ -122,6 +122,10 @@
     width:100%;
 }
 
+.input_search{
+    width:50%;margin-left:50px;margin-top:5px;display: inline-block;
+}
+
 
 .span_panier{
     border-right: 1px solid black;
@@ -161,4 +165,21 @@
     border: 1px solid #999999;
     background-color: #cccccc;
     color: #666666;
+}
+
+
+.div_search{
+    display: inline-block;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 500px;
+    height: 300px;
+    margin: auto;
+    background-color: white;
+    border: 1px solid black;
+    text-align: center;
+    border-radius: 5px;
 }

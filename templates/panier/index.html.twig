@@ -904,6 +904,14 @@ class PayeForm {
                                         }, 1000)
 
 
+                                    }else{
+                                        console.log("error d'achat")
+                                        let p = $('<p style="color:red">Une erreur s\'est produite, la page va être réactualisée</p>')
+                                        $('#content_paye').append(p);
+
+                                        setTimeout(function(){
+                                            window.location.reload();
+                                        },2500)
                                     }
                                 
                                 },

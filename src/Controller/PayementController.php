@@ -80,7 +80,7 @@ class PayementController extends AbstractController
         }
 
      
-        return $this->redirectToRoute('panier');
+        return $this->json(['buy' => false ]);
 
     }
 

@@ -67,15 +67,15 @@ class ProductController extends AbstractController
      /**
      * @Route("/addPanier/{id}", name="add")
      */
-    public function AddPanier(Request $request , Session $session, int $id){
+    public function AddPanier(Request $request , Session $session){
 
         
-        // $session->remove('panier');
-
-
+        
          $product = $request->attributes->get('id');
 
-         $product = htmlentities($product);
+         $id = intval(preg_replace('/[^0-9]+/', '', $product), 10);
+
+         $id = htmlentities($id);
 
          $product = $this->getDoctrine()
                     ->getRepository(Product::class)
@@ -84,7 +84,7 @@ class ProductController extends AbstractController
 
         // add failed not product found
         if(!$product){
-            return $this->redirectToRoute('product',['id' => $product->getId()]);  
+            return $this->redirectToRoute('home');  
         }     
 
         $array_panier = [];
@@ -153,6 +153,26 @@ class ProductController extends AbstractController
     
         return $this->redirectToRoute('product',['id' => $product->getId()]);     
     }
+    
 
+  
+     /**
+     * @Route("/searchProduct", name="searchProduct")
+     */
+    public function SearchProduct(Request $request , Session $session){
+        //search product
+
+        //string in search bar
+        $product = $request->request->get('search_p');
+        $product = htmlentities($product);
+
+        $results =  $this->getDoctrine()->getRepository(Product::class)
+        ->SearchProduct($product);
+        
+
+
+        return $this->json(['code' => 200, 'product' => $results]);
+
+    }
 
 }

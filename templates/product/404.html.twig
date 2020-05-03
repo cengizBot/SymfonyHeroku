@@ -5,7 +5,36 @@
 {% block body %}
 
 
-Aucun article trouvé.
+<div id="alert_not_found" style="margin-top:200px;color:red;text-align:center">
+
+<h2>Aucun article trouvé</h2>
+<p>Vous allez être redirigé <span id="timer"> </span> </p>
+
+</div>
+
+<script>
+
+    let timer = 5;
+    let p = $('#timer');
+    $(p).text(timer);
+
+    setInterval(function(){
+
+        timer = timer - 1;
+        $(p).text(timer);
+        
+        if(timer === 0){
+            
+            window.location.replace("http://localhost:8000/");
+
+        }
+
+    },1000);
+
+    
+
+</script>
+
 
 
 {% endblock %}

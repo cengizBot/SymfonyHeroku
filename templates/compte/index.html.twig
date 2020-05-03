@@ -16,7 +16,7 @@
          <div id="{{key}}_div" class="shadow_product" style="margin:5px;margin-top:10px">
               <div id="div_header" style="padding: 10px;">
                           {% for i in 0..0 %}
-                            <p>  Commande effectuée le   {{ commande[i].date_buy|date("m/d/Y à H:i" , "Europe/Paris")  }} | Nombres d'articles : {{ commande[i].number_article }} 
+                            <p>  Commande effectuée le   {{ commande[i].date_buy|date("d/m/Y à H:i" , "Europe/Paris")  }} | Nombres d'articles : {{ commande[i].number_article }} 
                             <a style="float:right;margin-right:10px" href="#more" class="more">Voir plus</a>
                             </p>
 
