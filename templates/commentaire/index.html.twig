@@ -1,0 +1,142 @@
+<div id="display_comments" style='margin-bottom:20px;'>
+        <h5>Espace commentaire</h5>
+        <div class="line"></div>
+        <br/>
+{% if app.user %}
+  
+
+        <form id="post_comment">
+            <div class="form-group">
+                <textarea name="textarea" class="form-control" maxlength="500" minlength="10" id="textarea"></textarea>
+                <small style="color:red" id="error_textarea"></small>
+            </div>
+            <button type="submit" class="btn btn-primary">Commenter</button>
+        </form>
+
+
+    <script>
+
+    $( "#post_comment" ).submit(function( event ) {
+        console.log('comment article');
+        $('#textarea').removeClass('error_input');
+        $('#error_textarea').empty()
+        event.preventDefault();
+        let comment = $('#textarea');
+        let val = $(comment).val();
+
+
+
+        let error_comment = []
+
+        let final = val.split(' ').join('').length;
+        console.log(final);
+
+        if( final < 10 ){
+
+            error_comment.push({
+                'input' : 'textarea',
+                'error' : 'Champ trop court doit contenir au minimum 10 charactères'
+            })
+
+        }
+
+        if( final > 500 ){
+
+            error_comment.push({
+                'input' : 'textarea',
+                'error' : 'Champ trop long doit contenir au maximum 500 charactères'
+            })
+
+        }
+
+        if(error_comment.length === 0){
+            //post comment
+            $.ajax({
+                 method: "POST",
+                 url: "/commentaire",
+                 dataType: "json",
+                 data: {
+                     "comment" : val
+                 },
+                 success : function(data){
+                    console.log(data);
+                    let div_comment = $('#display_comments');
+                        let row = $('<div class="row shadow_product" style="margin-top:10px;margin-bottom:10px">');
+                            let hearder_col = $("<div class='col-lg-6 col-md-6'>");
+                                let icon = $('<img src="{{ asset("build/images/user_i.png") }}">');
+                                let span = $('<span>');
+                                let date = $('<span>');
+                            let content_col = $('<div class="col-lg-6 col-md-6">');
+                                let p = $('<p>');
+
+                     if(data.code === 200){
+                           
+                            $('#textarea').val('');
+
+                            $(span).css('font-weight','bold');
+                            $(span).text(data.data.name);
+                            $(date).text(data.data.date);
+
+                            $(p).text(data.data.comment);
+                          
+                            $(hearder_col).append(icon,span, ", Le" ,date);
+                            $(content_col).append("Commentaire :" , p);
+
+                            $(row).append(hearder_col,content_col);
+                            $(div_comment).append(row);
+
+
+
+                     }
+
+                 },
+                 error: function(error){
+
+                     console.log(error)
+                 }  
+            })
+
+        }else{
+
+            $('#textarea').addClass('error_input');
+            let txt = error_comment[0].error;
+            $('#error_textarea').text(txt);
+
+        }
+        
+
+
+    });
+
+
+
+    </script>
+{% else %}
+
+<p>Vous devez être connecté pour commenter des articles</p>
+
+
+
+{% endif %}
+
+{% for comment in commentaires %}
+<div class="row shadow_product" style="margin-top:30px;margin-bottom:20px">
+    <div class='col-lg-6 col-md-6'>
+        <img src="{{ asset("build/images/user_i.png") }}">
+        <span>{{ comment.name }},</span>
+        <span> Le {{ comment.date|date("d/m/y à H:i") }}</span>
+    </div>
+    <div class="col-lg-6 col-md-6">
+        <p>{{ comment.comment }} </p>
+    </div>
+
+</div>
+
+{% endfor %}
+
+
+</div>
+
+
+
+</br></br>

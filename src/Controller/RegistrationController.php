@@ -64,11 +64,11 @@ class RegistrationController extends AbstractController
 
 
             //check if equal mdp
-            $username = htmlentities($task->getUsername());
-            $name = htmlentities($task->getName());
-            $email = htmlentities($task->getEmail());
-            $pass = htmlentities($task->getPassword());
-            $samepass = htmlentities($task->getSamePassword());
+            $username = htmlspecialchars($task->getUsername());
+            $name = htmlspecialchars($task->getName());
+            $email = htmlspecialchars($task->getEmail());
+            $pass = htmlspecialchars($task->getPassword());
+            $samepass = htmlspecialchars($task->getSamePassword());
 
             if($pass != $samepass){
                

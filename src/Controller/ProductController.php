@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Commentaire;
 use App\Entity\LikeProduct;
 use App\Entity\Product;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -43,7 +44,7 @@ class ProductController extends AbstractController
         }
 
         
-        $session->set('product', $get);
+        $session->set('product', $id);
    
 
         //get the number of like product
@@ -53,14 +54,20 @@ class ProductController extends AbstractController
         $likes = implode("",$like);
 
 
-        // dump($like);
-        // die();
+        //get the commentaire of product
+        $repository = $this->getDoctrine()->getRepository(Commentaire::class);
+
+        $commentaires = $repository->findByProduct($id);
+
+        
+
 
         // if found product render page index
         return $this->render('product/index.html.twig', [
             'product' => $product,
             'panier' => $numbers_product,
-            'like' => $likes
+            'like' => $likes,
+            'commentaires' => $commentaires
         ]);
     }
 
@@ -165,7 +172,7 @@ class ProductController extends AbstractController
         //string in search bar
         $product = $request->request->get('search_p');
         $product = htmlentities($product);
-
+        
         $results =  $this->getDoctrine()->getRepository(Product::class)
         ->SearchProduct($product);
         
