@@ -105,7 +105,8 @@ class BlogController extends AbstractController
      */
     public function home(Session $session){
 
-      
+        //test 
+        //test
         $repo = $this->getDoctrine()->getRepository(Product::class);
 
         $product = $repo->findAll();
