@@ -39,6 +39,7 @@ class CompteController extends AbstractController
         $newArray = [];
 
 
+
         for($i = 0; $i < count($arrayRef); $i ++){
 
             for($j = 0; $j < count($test); $j ++){
@@ -51,13 +52,16 @@ class CompteController extends AbstractController
                         // key exist post in array key
 
                         $number = count($newArray[$arrayRef[$i]]);
-                        $key =   $test[$j];
+                        $test[$j]["date_buy"] = new \DateTime($test[$j]["date_buy"], new \DateTimeZone('Europe/Paris'));
+                        $key = $test[$j];
                         array_push($newArray[$arrayRef[$i]],$key);
 
                     }else{
                         // key not exist post in array with create key
+                        $test[$j]["date_buy"] = new \DateTime($test[$j]["date_buy"], new \DateTimeZone('Europe/Paris'));
                         $key =  [ $arrayRef[$i] => [  $test[$j] ] ];
                         $newArray +=  $key;
+                    
                     }
 
                 }
@@ -65,6 +69,7 @@ class CompteController extends AbstractController
             }
 
         }
+     
 
 
         return $this->render('compte/index.html.twig', [
