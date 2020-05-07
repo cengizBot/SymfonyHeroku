@@ -20,8 +20,6 @@ class PayementController extends AbstractController
     {
 
 
-
-
         $name = htmlentities($request->request->get('name'));
         $firstname =  htmlentities($request->request->get('firstname'));
         $city =  htmlentities($request->request->get('city'));

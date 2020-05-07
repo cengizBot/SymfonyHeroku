@@ -17,14 +17,9 @@ class SecurityController extends AbstractController
     public function login(AuthenticationUtils $authenticationUtils, Session $session): Response
     {
 
-     
         $panier = new Product();
         $numbers_product = $panier->ManagerPanier($session);
-        
-        $panier = new Product();
-        $numbers_product = $panier->ManagerPanier($session);
-
-        
+                
         // if ($this->getUser()) {
         //     return $this->redirectToRoute('target_path');
         // }

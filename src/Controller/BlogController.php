@@ -104,7 +104,7 @@ class BlogController extends AbstractController
      * @Route("/", name="home")
      */
     public function home(Session $session){
-
+      
         //test 
         //test
         $repo = $this->getDoctrine()->getRepository(Product::class);
@@ -126,6 +126,6 @@ class BlogController extends AbstractController
 
     }
 
-
+    
 
 }
