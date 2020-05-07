@@ -26,7 +26,7 @@ class HistoriqueRepository extends ServiceEntityRepository
 
     public function addHistorique($product_id , $user_id , $number_article , $couts_totaux , $ref , $ttc)
     {
-
+            //date format
             $date = date('Y-m-d H:i:s');
             
 
