@@ -1,7 +1,7 @@
 var Encore = require('@symfony/webpack-encore');
 var CopyWebpackPlugin = require('copy-webpack-plugin');
 
-var WebpackNotifierPlugin = require('webpack-notifier');
+// var WebpackNotifierPlugin = require('webpack-notifier');
 
 
 // Manually configure the runtime environment if not already configured yet by the "encore" command.
