@@ -1,11 +1,7 @@
 
 DirectoryIndex index.php
 
-<VirtualHost *:80>
- 
-    DocumentRoot /var/www/project/public
-    
-</VirtualHost>
+
 
 <IfModule mod_negotiation.c>
     Options -MultiViews
