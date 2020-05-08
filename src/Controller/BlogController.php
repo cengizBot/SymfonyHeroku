@@ -117,15 +117,7 @@ class BlogController extends AbstractController
 
         $panier = new Product();
         $numbers_product = $panier->ManagerPanier($session);
-
-        $package = new Package(new EmptyVersionStrategy());
-
-        ?>
-
-        <img src="<?= $package->getUrl('/build/images/panier.png'); ?>">
-
-        <?php
-        die();
+    
         return $this->render('blog/home.html.twig', [
             'title' => 'Welcome Home',
             'products' => $product,
