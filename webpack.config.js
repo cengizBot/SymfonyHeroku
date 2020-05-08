@@ -83,6 +83,12 @@ Encore
     //.enableReactPreset()
     //.addEntry('admin', './assets/js/admin.js')
 ;
+module.exports = {
+    entry: {
+      app: './src/app.js',
+      vendor: './src/vendor.js'
+    }
+};
 
 module.exports = Encore.getWebpackConfig();
 
