@@ -19,6 +19,8 @@ Encore
     // only needed for CDN's or sub-directory deploy
     .setManifestKeyPrefix('public/build/')
 
+
+
     /*
      * ENTRY CONFIG
      *
@@ -30,6 +32,7 @@ Encore
      */
     .addEntry('app', './assets/js/app.js')
     .addEntry('front', './assets/js/product.js')
+    .addStyleEntry('css', './assets/css/app.css')
     //.addEntry('page1', './assets/js/page1.js')
     //.addEntry('page2', './assets/js/page2.js')
 

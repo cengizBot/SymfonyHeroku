@@ -9,6 +9,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
 
+
 class BlogController extends AbstractController
 {
     // /**
@@ -114,7 +115,7 @@ class BlogController extends AbstractController
         $panier = new Product();
         $numbers_product = $panier->ManagerPanier($session);
 
-   
+
      
         return $this->render('blog/home.html.twig', [
             'title' => 'Welcome Home',
