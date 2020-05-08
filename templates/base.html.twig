@@ -12,7 +12,7 @@
         {% block stylesheets %}
             {# 'app' must match the first argument to addEntry() in webpack.config.js #}
             {# {{ encore_entry_link_tags('app') }} #}
-            <link rel="stylesheet" href="../build/app.css"> 
+            <link rel="stylesheet" href="{{ asset('../build/app.css') }}"> 
 
         {% endblock %}
 
@@ -90,6 +90,8 @@
         <div class="container">
            {% block body %}{% endblock %}
         </div>
+
+        <script src="{{ asset('build/app.js') }}"></script>
 
       
     </body>

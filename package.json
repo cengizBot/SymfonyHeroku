@@ -8,6 +8,7 @@
   "name": "my-package",
   "scripts": {
     "build": "babel src -d lib",
-    "test": "jest"
+    "test": "jest",
+    "heroku-prebuild": "npm install --dev"
   }
 }
