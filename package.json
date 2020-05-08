@@ -7,10 +7,8 @@
   },
   "name": "my-package",
   "scripts": {
-    "build": "webpack -p --config ./resources/webpack/webpack.config.js --display-error-details",
+    "build": "babel src -d lib",
     "test": "jest",
-    "heroku-prebuild": "npm install --dev",
-    "watch": "webpack -d --watch --config ./resources/webpack/webpack.config.js --display-error-details",
-    "heroku-postbuild": "webpack -p --config ./resources/webpack/webpack.config.js"
+    "heroku-prebuild": "npm install --dev"
   }
 }
