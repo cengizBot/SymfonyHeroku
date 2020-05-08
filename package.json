@@ -223,9 +223,13 @@
     "minimalistic-assert": "^1.0.1",
     "minimalistic-crypto-utils": "^1.0.1",
     "minimatch": "^3.0.4",
-    "minimist": "^1.2.5"
+    "minimist": "^1.2.5",
+    "webpack-notifier": "^1.8.0"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "@symfony/webpack-encore": "^0.29.1",
+    "copy-webpack-plugin": "^5.1.1"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
