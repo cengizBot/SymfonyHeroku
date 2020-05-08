@@ -78,17 +78,13 @@ Encore
 
     // uncomment if you're having problems with a jQuery plugin
     //.autoProvidejQuery()
-
+    .enableSingleRuntimeChunk()
     // uncomment if you use API Platform Admin (composer req api-admin)
     //.enableReactPreset()
     //.addEntry('admin', './assets/js/admin.js')
 ;
-module.exports = {
-    entry: {
-      app: './src/app.js',
-      vendor: './src/vendor.js'
-    }
-};
+
+
 
 module.exports = Encore.getWebpackConfig();
 
