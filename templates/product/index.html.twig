@@ -70,136 +70,137 @@
 
 
 
-{% block javascripts %}
-        {{ encore_entry_script_tags('front') }}
-{% endblock %}
-
-
 {% include 'commentaire/index.html.twig' %}
 
-<script>
 
-        let btn_like = ('');
-        let form_like = $('#like_form');
+{% if is_granted('IS_AUTHENTICATED_FULLY') %}
+    <script>
+            let btn_like = ('');
+            let form_like = $('#like_form');
 
-        $.ajax({
-                method: "GET",
-                url: "/like",
-                success: function(data){
-                    console.log(data.length);
-                    let array = data.product_id;
-                    let id_product = "{{ product.id }}";
+            $.ajax({
+                    method: "GET",
+                    url: "/like",
+                    success: function(data){
+                        console.log(data.length);
+                        let array = data.product_id;
+                        let id_product = "{{ product.id }}";
+                        
+                        if(array.length > 0){
+                            $(form_like).attr('action',`unlikeproduct/${id_product}`);
+                            $(form_like).append('<button type="button" class="btn btn-primary" id="btn_like" style="font-size:14px">Vous aimé ce produit</button>');
+
+                        }
+                        else{
+                            $(form_like).attr('action',`likeproduct/${id_product}`);
+                            $(form_like).append('<button type="button" class="btn disabled_btn" id="btn_like" style="font-size:14px">Liker ce produit</button>');
+                        }
                     
-                    if(array.length > 0){
-                        $(form_like).attr('action',`unlikeProduct/${id_product}`);
-                        $(form_like).append('<button type="button" class="btn btn-primary" id="btn_like" style="font-size:14px">Vous aimé ce produit</button>');
-
+                    },
+                    error: function(error){
+                        console.log(error);
                     }
-                    else{
-                        $(form_like).attr('action',`likeproduct/${id_product}`);
-                        $(form_like).append('<button type="button" class="btn disabled_btn" id="btn_like" style="font-size:14px">Liker ce produit</button>');
-                    }
-                   
-                },
-                error: function(error){
-                    console.log(error);
-                }
-        });
+            });
 
 
-    $(document).on('click','#btn_like' ,function(e){
+        $(document).on('click','#btn_like' ,function(e){
 
-       let action = $(form_like).attr('action');
+        let action = $(form_like).attr('action');
 
-       let url = action.split('/').shift();
+        let url = action.split('/').shift();
 
-       switch (url) {
+        switch (url) {
 
-            case 'likeproduct':
+                case 'likeproduct':
 
-              console.log('like product');
+                console.log('like product');
 
-              $.ajax({
-                        method: "post",
-                        url: "/likeproduct/{{ product.id  }}",
-                        success: function(data){
-                            console.log(data);
+                $.ajax({
+                            method: "post",
+                            url: "/likeproduct/{{ product.id  }}",
+                            success: function(data){
+                                console.log(data);
 
-                        if(data.product_id === true){
-                            
-                            $(form_like).attr('action','unlikeProduct/{{ product.id }}')
-                            $('#btn_like').removeClass('disabled_btn');
-                            $('#btn_like').addClass('btn-primary');
-                            $('#btn_like').text('Vous aimé ce produit');
-                            
-                            // add like number to product
-                            let like = $('#display_like').text();
-                            like = parseInt(like);
-                            like = like + 1;
+                            if(data.product_id === true){
+                                
+                                $(form_like).attr('action','unlikeproduct/{{ product.id }}')
+                                $('#btn_like').removeClass('disabled_btn');
+                                $('#btn_like').addClass('btn-primary');
+                                $('#btn_like').text('Vous aimé ce produit');
+                                
+                                // add like number to product
+                                let like = $('#display_like').text();
+                                like = parseInt(like);
+                                like = like + 1;
 
-                            if(like <= 1){
-                                $("#string_like").text('like')
-                            }else{
-                                 $("#string_like").text('likes')
+                                if(like <= 1){
+                                    $("#string_like").text('like')
+                                }else{
+                                    $("#string_like").text('likes')
+                                }
+                                $("#display_like").text(like);
+
+                                
                             }
-                            $("#display_like").text(like);
-
                             
-                        }
-                        
-                        
-                        },
-                        error: function(error){
-                            console.log(error);
-                        }
-               });
+                            
+                            },
+                            error: function(error){
+                                console.log(error);
+                            }
+                });
 
 
-                break;
-            case 'unlikeProduct':
-                console.log('unlike product');
+                    break;
+                case 'unlikeproduct':
+                    console.log('unlike product');
+                
+                $.ajax({
+                            method: "post",
+                            url: "/unlikeproduct/{{ product.id }}",
+                            success: function(data){
+                                console.log(data);
+
+                            if(data.product_id === true){
+                                
+                                $(form_like).attr('action','likeproduct/{{ product.id }}')
+                                $('#btn_like').addClass('disabled_btn');
+                                $('#btn_like').removeClass('btn-primary');
+                                $('#btn_like').text('Liker ce produit');
+
+                                // add like number to product
+                                let like = $('#display_like').text();
+                                like = parseInt(like);
+                                like = like - 1;
+                                if(like <= 1){
+                                    $("#string_like").text('like')
+                                }else{
+                                    $("#string_like").text('likes')
+                                }
+                                $("#display_like").text(like);
+
+                            }
+                            
+                            
+                            },
+                            error: function(error){
+                                console.log(error);
+                            }
+                });
+
+
+                    break;
+
+        }
             
-              $.ajax({
-                        method: "post",
-                        url: "/dislelikeproduct/{{ product.id }}",
-                        success: function(data){
-                            console.log(data);
-
-                        if(data.product_id === true){
-                            
-                            $(form_like).attr('action','likeproduct/{{ product.id }}')
-                            $('#btn_like').addClass('disabled_btn');
-                            $('#btn_like').removeClass('btn-primary');
-                            $('#btn_like').text('Liker ce produit');
-
-                             // add like number to product
-                            let like = $('#display_like').text();
-                            like = parseInt(like);
-                            like = like - 1;
-                            if(like <= 1){
-                                $("#string_like").text('like')
-                            }else{
-                                 $("#string_like").text('likes')
-                            }
-                            $("#display_like").text(like);
-
-                        }
-                        
-                        
-                        },
-                        error: function(error){
-                            console.log(error);
-                        }
-               });
-
-
-                break;
-
-       }
         
-     
 
-    })
+        })
+    </script>
+
+{% endif %}
+
+<script>
 
     var isMobile = (/Mobile/i.test(navigator.userAgent));
 
@@ -212,27 +213,6 @@
         $(div).css('margin','0 auto');
 
     }
-
-
-{# 
-    $("#ajaxBtn").click(function(e){
-
-        $.ajax({
-            method: "POST",
-            url: "/like",
-            dataType: "json",
-            data: { data =>  }
-            success: function(data){
-                console.log(data);
-            },
-            error: function(error){
-                console.log(error);
-            }
-        });
-
-    }) #}
-      
-
 
 </script>
     

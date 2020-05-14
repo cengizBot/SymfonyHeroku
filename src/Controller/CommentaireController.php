@@ -17,27 +17,30 @@ class CommentaireController extends AbstractController
      */
     public function index(Request $request, Session $session)
     {
-        $comment = $request->request->get('comment');
-        $user = $this->getUser()->getId();
-        $name = $this->getUser()->getName();
-        $prod = $session->get('product');
-        $date = date('d/m/y à H:i');
+        if(!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
+          
+                $comment = $request->request->get('comment');
+                $user = $this->getUser()->getId();
+                $name = $this->getUser()->getName();
+                $prod = $session->get('product');
+                $date = date('d/m/y à H:i');
 
-        $data = [
-            "name" => $name,
-            "comment" => $comment,
-            "date" => $date
-        ];
+                $data = [
+                    "name" => $name,
+                    "comment" => $comment,
+                    "date" => $date
+                ];
 
-        $commentaire = $this->getDoctrine()->getRepository(Commentaire::class)
-        ->PostCommentaire($prod , $user , $name , $comment);
+                $commentaire = $this->getDoctrine()->getRepository(Commentaire::class)
+                ->PostCommentaire($prod , $user , $name , $comment);
 
-        if($commentaire){
-            return $this->json(['code' => 200  , 'data' => $data ]);
+                if($commentaire){
+                    return $this->json(['code' => 200  , 'data' => $data ]);
+                }
+
+        }else{
+
+            return $this->redirectToRoute('home');
         }
-        
-        
-
-
     }
 }

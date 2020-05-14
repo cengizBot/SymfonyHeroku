@@ -41,7 +41,7 @@ class PayementController extends AbstractController
         if ( !empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest' )
         {
                 
-               // repete la requete celon le nbt d'article
+               // repete la requete selon le nbr d'article
                 if($session->get('panier') === null){
                     return $this->redirectToRoute('home');
                 }

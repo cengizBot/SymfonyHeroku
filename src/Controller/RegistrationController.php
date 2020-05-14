@@ -99,8 +99,7 @@ class RegistrationController extends AbstractController
             //if not errors in array errors
             if(empty($arrayErrors)){
                 if ($form->isSubmitted() && $form->isValid()) {
-
-                  
+  
                     $date = date('Y-m-d H:i:s');
                     $startDate = new \DateTime($date);
 

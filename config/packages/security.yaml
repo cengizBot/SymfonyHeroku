@@ -40,5 +40,11 @@ security:
       - { path: ^/add, role: ROLE_USER }
       - { path: ^/panier, role: ROLE_USER }
       - { path: ^/compte, role: ROLE_USER }
-
+      - { path: ^/commentaire, role: ROLE_USER }
+      - { path: ^/like, role: ROLE_USER }
+      - { path: ^/likeproduct/, role: ROLE_USER }
+      - { path: ^/unlikeproduct/, role: ROLE_USER }
+      - { path: ^/added_product/, role: ROLE_USER }
+      - { path: ^/remove_product/, role: ROLE_USER }
+      - { path: ^/payement, role: ROLE_USER }
    

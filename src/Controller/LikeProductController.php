@@ -19,17 +19,26 @@ class LikeProductController extends AbstractController
     public function index(Request $request, Session $session, EntityManagerInterface $em)
     {
 
-        $id_prod = $session->get('product');
+        if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest' ) {
+            $id_prod = $session->get('product');
 
-        $userId = $this->getUser()->getId();
+            $userId = $this->getUser()->getId();
 
+            $products = $this->getDoctrine()->getRepository(LikeProduct::class)
+            ->findByExampleField($id_prod,$userId);
 
-        $products = $this->getDoctrine()->getRepository(LikeProduct::class)
-        ->findByExampleField($id_prod,$userId);
-
-     
         
-        return $this->json(['code' => 200 , 'product_id' => $products]);
+            
+            return $this->json(['code' => 200 , 'product_id' => $products]);
+        }
+
+        if($session->get('product') != null){
+            return $this->redirectToRoute('product',['id' => $session->get('product') ]);
+        }
+
+        return $this->redirectToRoute('home');
+
+       
 
     }
 
@@ -39,38 +48,51 @@ class LikeProductController extends AbstractController
      */
     public function likeproduct(Request $request, Session $session, EntityManagerInterface $em)
     {
+        if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest' ) {
+            
+            $id_prod = $session->get('product');
+                       
+            $userId = $this->getUser()->getId();
 
-        $id_prod = $session->get('product');
+            $products = $this->getDoctrine()->getRepository(LikeProduct::class)
+            ->likeProduct($id_prod,$userId);
 
         
+            return $this->json(['code' => 200 , 'product_id' => $products]);
 
-        $userId = $this->getUser()->getId();
+        }
 
-        $products = $this->getDoctrine()->getRepository(LikeProduct::class)
-        ->likeProduct($id_prod,$userId);
+        if($session->get('product') != null){
+            return $this->redirectToRoute('product',['id' => $session->get('product') ]);
+        }
 
-     
-        return $this->json(['code' => 200 , 'product_id' => $products]);
-
+        return $this->redirectToRoute('home');
     }
 
     /**
-    * @Route("/dislelikeproduct/{id}", name="dislelikeproduct")
+    * @Route("/unlikeproduct/{id}", name="dislelikeproduct")
     */
     public function dislelikeproduct(Request $request, Session $session, EntityManagerInterface $em)
     {
 
-        $id_prod = $session->get('product');
+        if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest' ) {
+           
+            $id_prod = $session->get('product');
+                   
+            $userId = $this->getUser()->getId();
+
+            $products = $this->getDoctrine()->getRepository(LikeProduct::class)
+            ->unlikeProduct($id_prod,$userId);
 
         
+            return $this->json(['code' => 200 , 'product_id' => $products]);
+        }
 
-        $userId = $this->getUser()->getId();
+        if($session->get('product') != null){
+            return $this->redirectToRoute('product',['id' => $session->get('product') ]);
+        }
 
-        $products = $this->getDoctrine()->getRepository(LikeProduct::class)
-        ->unlikeProduct($id_prod,$userId);
-
-     
-        return $this->json(['code' => 200 , 'product_id' => $products]);
+        return $this->redirectToRoute('home');;
 
     }
 }
