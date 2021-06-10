@@ -71,7 +71,7 @@
     "css-color-names": "^0.0.4",
     "css-select-base-adapter": "^0.1.1",
     "css-tree": "^1.0.0-alpha.39",
-    "css-what": "^3.2.1",
+    "css-what": "^5.0.1",
     "cssesc": "^3.0.0",
     "cssnano-util-get-arguments": "^4.0.0",
     "cssnano-util-get-match": "^4.0.0",
