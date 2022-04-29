@@ -23,7 +23,7 @@
     "array-unique": "^0.3.2",
     "asn1.js": "^4.10.1",
     "assign-symbols": "^1.0.0",
-    "async": "^2.6.3",
+    "async": "^2.6.4",
     "async-each": "^1.0.3",
     "async-limiter": "^1.0.1",
     "atob": "^2.1.2",
