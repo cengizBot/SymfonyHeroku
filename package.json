@@ -204,7 +204,7 @@
     "leven": "^3.1.0",
     "levenary": "^1.1.1",
     "loader-runner": "^2.4.0",
-    "loader-utils": "^1.4.0",
+    "loader-utils": "^1.4.1",
     "lodash": "^4.17.15",
     "lodash.memoize": "^4.1.2",
     "lodash.uniq": "^4.5.0",
